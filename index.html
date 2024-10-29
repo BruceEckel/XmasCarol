@@ -30,6 +30,15 @@
     <div id="log-container" class="log-container"></div>
 
     <script>
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 const characterNames = [
     "ADULT CAROLER",
     "ALL",
@@ -3473,6 +3482,8 @@ const scriptData = [
         "encoded": "A h t t. H! W! H a y! M C! W, i i t c t t B. Y m h a c. H (Hands the boy some cash) g a f a c a t i t 6 25 06 C T."
     }
 ];
+let pauseFactor = 1.0;
+let wakeLock = null;
 /**
  * Create a set of unique character names from the provided list of character lines.
  * @param characterLines - The array of CharacterLine objects.
@@ -3490,7 +3501,7 @@ const updateTitleAndUrl = (characterName) => {
     history.pushState({}, '', `?character=${encodeURIComponent(characterName)}`);
 };
 /**
- * Set the character heading and add the Abbreviate/Expand button.
+ * Set the character heading and add the Abbreviate/Expand and Speak Cues buttons.
  * @param characterName - The name of the character.
  */
 const setupCharacterHeading = (characterName) => {
@@ -3505,6 +3516,27 @@ const setupCharacterHeading = (characterName) => {
     toggleButton.textContent = 'Abbreviate';
     toggleButton.addEventListener('click', () => toggleAbbreviation(characterName, toggleButton));
     characterButtonsContainer.appendChild(toggleButton);
+    const speakButton = document.createElement('button');
+    speakButton.textContent = 'Speak Cues';
+    speakButton.addEventListener('click', () => speakCues(characterName));
+    characterButtonsContainer.appendChild(speakButton);
+    // Pause factor control
+    const pauseControl = document.createElement('input');
+    pauseControl.type = 'range';
+    pauseControl.min = '0.5';
+    pauseControl.max = '3';
+    pauseControl.step = '0.1';
+    pauseControl.value = pauseFactor.toString();
+    pauseControl.addEventListener('input', (event) => {
+        pauseFactor = parseFloat(event.target.value);
+    });
+    characterButtonsContainer.appendChild(pauseControl);
+    const pauseLabel = document.createElement('label');
+    pauseLabel.textContent = ` Pause Factor: ${pauseFactor}`;
+    pauseControl.addEventListener('input', () => {
+        pauseLabel.textContent = ` Pause Factor: ${pauseFactor}`;
+    });
+    characterButtonsContainer.appendChild(pauseLabel);
 };
 /**
  * Toggle the abbreviation state for all lines of the selected character.
@@ -3521,6 +3553,64 @@ const toggleAbbreviation = (characterName, toggleButton) => {
     });
     refreshCharacterLines(characterName);
 };
+/**
+ * Engage the wake lock to prevent the device from sleeping.
+ */
+const engageWakeLock = () => __awaiter(void 0, void 0, void 0, function* () {
+    if ('wakeLock' in navigator) {
+        try {
+            wakeLock = yield navigator.wakeLock.request('screen');
+        }
+        catch (err) {
+            console.error(`Wake lock failed: ${err}`);
+        }
+    }
+});
+/**
+ * Release the wake lock to allow the device to sleep.
+ */
+const releaseWakeLock = () => {
+    if (wakeLock) {
+        wakeLock.release();
+        wakeLock = null;
+    }
+};
+/**
+ * Estimate the time it takes to speak a given text.
+ * @param text - The text to be spoken.
+ * @param wordsPerMinute - The speaking rate in words per minute (default is 150).
+ * @returns Estimated time in seconds.
+ */
+const estimateSpeechDuration = (text, wordsPerMinute = 150) => {
+    const words = text.trim().split(/\s+/).length;
+    const wordsPerSecond = wordsPerMinute / 60;
+    return words / wordsPerSecond;
+};
+/**
+ * Speak each cue line aloud using the browser's text-to-speech functionality.
+ * @param characterName - The name of the character whose cues are to be spoken.
+ */
+const speakCues = (characterName) => __awaiter(void 0, void 0, void 0, function* () {
+    yield engageWakeLock();
+    for (let i = 0; i < scriptData.length; i++) {
+        const cl = scriptData[i];
+        if (cl.character === characterName && i > 0) {
+            const cueLine = scriptData[i - 1];
+            if (cueLine.character !== characterName) {
+                const utterance = new SpeechSynthesisUtterance(cueLine.lines);
+                window.speechSynthesis.speak(utterance);
+                yield new Promise(resolve => {
+                    utterance.onend = resolve;
+                });
+                // Estimate the pause duration based on the cue line length
+                const estimatedDuration = estimateSpeechDuration(cl.lines, 150);
+                const pauseDuration = estimatedDuration * pauseFactor * 1000; // Convert to milliseconds
+                yield new Promise(resolve => setTimeout(resolve, pauseDuration));
+            }
+        }
+    }
+    releaseWakeLock();
+});
 /**
  * Display the lines for a particular character, including cues from previous characters.
  * @param characterName - The name of the character whose lines are to be displayed.
