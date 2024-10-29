@@ -1,0 +1,3601 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memorizer</title>
+    <style>
+        .button-container {
+            margin: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="character-buttons" class="button-container">
+        <!-- Buttons will be added here by the memorizer.ts script -->
+    </div>
+
+    <div id="script-container" class="script-container"></div>
+    <div id="log-container" class="log-container"></div>
+
+    <script>
+const characterNames = [
+    "ADULT CAROLER",
+    "ALL",
+    "BELINDA",
+    "BELINDA AND MARTHA",
+    "BELLE",
+    "BOB CRATCHIT",
+    "BOY SCROOGE",
+    "BUSINESS PERSON #1",
+    "BUSINESS PERSON #2",
+    "BUSINESS PERSON #3",
+    "CAROLINE",
+    "CHARITY SOLICITOR #1",
+    "CHARITY SOLICITOR #2",
+    "CHARLOTTE",
+    "DICK WILKINS",
+    "EVERYONE",
+    "FAN",
+    "FEZZIWIG",
+    "FRED",
+    "FRED'S WIFE",
+    "GHOST OF CHRISTMAS PAST",
+    "GHOST OF CHRISTMAS PRESENT",
+    "JOE",
+    "LUCY",
+    "MARLEY",
+    "MARTHA",
+    "MRS. CRATCHIT",
+    "MRS. FEZZIWIG",
+    "NARRATOR",
+    "PETER",
+    "PETER AND BELINDA",
+    "SCHOOLMASTER",
+    "SCROOGE",
+    "THE FAMILY",
+    "THIEF 1",
+    "THIEF 1 AND 2",
+    "THIEF 2",
+    "THIEF 3",
+    "THOMAS",
+    "TINY TIM",
+    "TURKEY BOY",
+    "YOUNG CAROLER",
+    "YOUNG SCROOGE"
+];
+const scriptData = [
+    {
+        "character": "NARRATOR",
+        "lines": "Marley was dead, to begin with. There is no doubt whatever about that. The register of his burial was signed by the clergyman, the clerk, the undertaker, and the chief mourner. Scrooge signed it. Old Marley was as dead as a door-nail.",
+        "abbrev": false,
+        "encoded": "M w d, t b w. T i n d w a t. T r o h b w s b t c, t c, t u, a t c m. S s i. O M w a d a a d n."
+    },
+    {
+        "character": "NARRATOR",
+        "lines": "Mind! I don't mean to say that I know of my own knowledge, what there is particularly dead about a door-nail. I might have been inclined, myself, to regard a coffin-nail as the deadest piece of ironmongery in the trade. But the wisdom of our ancestors is in the simile; and my unhallowed hands shall not disturb it. You will, therefore, permit me to repeat, emphatically, that Marley was as dead as a door-nail.",
+        "abbrev": false,
+        "encoded": "M! I d m t s t I k o m o k, w t i p d a a d n. I m h b i, m, t r a c n a t d p o i i t t. B t w o o a i i t s; a m u h s n d i. Y w, t, p m t r, e, t M w a d a a d n."
+    },
+    {
+        "character": "NARRATOR",
+        "lines": "Scrooge and he were partners for I don't know how many years. Scrooge was his sole executor, his sole administrator, his sole assign, his sole residuary legatee, his sole friend, and sole mourner. There is no doubt that Marley was dead. This must be distinctly understood, or nothing wonderful can come of the story I am going to relate. Scrooge never painted out Old Marley's name. There it stood, years afterwards, above the counting house door. The firm was known as \"Scrooge and Marley.\" Sometimes people new to the business called Scrooge \"Scrooge,\" and sometimes \"Marley,\" but he answered to both names. It was all the same to him.",
+        "abbrev": false,
+        "encoded": "S a h w p f I d k h m y. S w h s e, h s a, h s a, h s r l, h s f, a s m. T i n d t M w d. T m b d u, o n w c c o t s I a g t r. S n p o O M n. T i s, y a, a t c h d. T f w k a S a M. S p n t t b c S S, a s M, b h a t b n. I w a t s t h."
+    },
+    {
+        "character": "NARRATOR",
+        "lines": "Oh! but he was a tight-fisted hand at the grindstone, Scrooge! A squeezing, wrenching, grasping, scraping, clutching, covetous old sinner! Hard and sharp as flint, from which no steel had ever struck out generous fire; secret, and self-contained, and solitary as an oyster. He carried his own low temperature always about with him; he iced his office in the dog-days, and didn't thaw it one degree at Christmas. Nobody ever stopped him in the street to say, with gladsome looks, 'My dear Scrooge, how are you? When will you come to see me?' No beggars implored him to bestow a trifle, no children asked him what it was o'clock. Even the blind men's dogs appeared to know him; and, when they saw him coming on, would tug their owners into doorways and up courts; and then would wag their tails as though they said, 'No eye at all is better than an evil eye, dark master!' But what did Scrooge care? It was the very thing he liked.",
+        "abbrev": false,
+        "encoded": "O! b h w a t f h a t g, S! A s, w, g, s, c, c o s! H a s a f, f w n s h e s o g f; s, a s c, a s a a o. H c h o l t a a w h; h i h o i t d d, a d t i o d a C. N e s h i t s t s, w g l, 'My d S, h a y? W w y c t s m N b i h t b a t, n c a h w i w o. E t b m d a t k h; a, w t s h c o, w t t o i d a u c; a t w w t t a t t s, 'No e a a i b t a e e, d m B w d S c? I w t v t h l."
+    },
+    {
+        "character": "NARRATOR",
+        "lines": "In his counting house, Scrooge kept his eye upon his clerk, Bob Cratchit, who was copying letters. Scrooge had a very small fire, but the clerk's fire was so very much smaller that it looked like one coal. He couldn't replenish it, however, for Scrooge kept the coal-box next to his desk; and so surely as the clerk came in with the shovel, the master predicted that it would be necessary for them to part. Wherefore the clerk put on his white comforter, and tried to warm himself at the candle; in which effort, not being a man of a strong imagination, he failed.",
+        "abbrev": false,
+        "encoded": "I h c h, S k h e u h c, B C, w w c l. S h a v s f, b t c f w s v m s t i l l o c. H c r i, h, f S k t c b n t h d; a s s a t c c i w t s, t m p t i w b n f t t p. W t c p o h w c, a t t w h a t c; i w e, n b a m o a s i, h f."
+    },
+    {
+        "character": "FRED",
+        "lines": "A merry Christmas, uncle! God save you!",
+        "abbrev": false,
+        "encoded": "A m C, u! G s y!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Bah! Humbug!",
+        "abbrev": false,
+        "encoded": "B! H!"
+    },
+    {
+        "character": "FRED",
+        "lines": "Christmas a humbug, uncle? You don't mean that, I am sure.",
+        "abbrev": false,
+        "encoded": "C a h, u? Y d m t, I a s."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "I do. Merry Christmas - what right have you to be merry? You're poor enough.",
+        "abbrev": false,
+        "encoded": "I d. M C w r h y t b m? Y p e."
+    },
+    {
+        "character": "FRED",
+        "lines": "Come, then. What right have you to be dismal? You're rich enough.",
+        "abbrev": false,
+        "encoded": "C, t. W r h y t b d? Y r e."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Bah! (Short pause) Humbug!",
+        "abbrev": false,
+        "encoded": "B! (Short pause) H!"
+    },
+    {
+        "character": "FRED",
+        "lines": "Don't be cross, uncle!",
+        "abbrev": false,
+        "encoded": "D b c, u!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "What else can I be when I live in such a world of fools as this? Merry Christmas - out upon merry Christmas! What's Christmas-time to you but a time for paying bills without money; a time for finding yourself a year older, and not an hour richer; If I could work my will, every idiot who goes about with \"Merry Christmas\" on his lips should be boiled with his own pudding, and buried with a stake of holly through his heart. He should!",
+        "abbrev": false,
+        "encoded": "W e c I b w I l i s a w o f a t? M C o u m C! W C t t y b a t f p b w m; a t f f y a y o, a n a h r; I I c w m w, e i w g a w M C o h l s b b w h o p, a b w a s o h t h h. H s!"
+    },
+    {
+        "character": "FRED",
+        "lines": "Uncle!",
+        "abbrev": false,
+        "encoded": "U!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Nephew! Keep Christmas in your own way and let me keep it in mine.",
+        "abbrev": false,
+        "encoded": "N! K C i y o w a l m k i i m."
+    },
+    {
+        "character": "FRED",
+        "lines": "Keep it?! But you don't keep it.",
+        "abbrev": false,
+        "encoded": "K i! B y d k i."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Let me leave it alone, then. Much good may it do you. Much good it has ever done you!",
+        "abbrev": false,
+        "encoded": "L m l i a, t. M g m i d y. M g i h e d y!"
+    },
+    {
+        "character": "FRED",
+        "lines": "There are many things from which I might have derived good, by which I have not profited, I dare say. Christmas among the rest. But I am sure I have always thought of Christmas-time, when it has come round - as a good time; a kind, forgiving, charitable, pleasant time; the only time I know of, in the long calendar of the year, when men and women seem by one consent to open their shut-up hearts freely, and to think of people below them as if they really were fellow-passengers to the grave, and not another race of creatures bound on other journeys. And therefore, uncle, though it has never put a scrap of gold or silver in my pocket, I believe that it has done me good and will do me good; and I say, God bless it.",
+        "abbrev": false,
+        "encoded": "T a m t f w I m h d g, b w I h n p, I d s. C a t r. B I a s I h a t o C t, w i h c r a a g t; a k, f, c, p t; t o t I k o, i t l c o t y, w m a w s b o c t o t s u h f, a t t o p b t a i t r w f p t t g, a n a r o c b o o j. A t, u, t i h n p a s o g o s i m p, I b t i h d m g a w d m g; a I s, G b i."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "(To Bob Cratchit) Let me hear another sound from you, and you'll keep your Christmas by losing your situation! (To his nephew) You're quite a powerful speaker, sir. I wonder you don't go into Parliament.",
+        "abbrev": false,
+        "encoded": "(To Bob Cratchit) L m h a s f y, a y k y C b l y s! (To his nephew) Y q a p s, s. I w y d g i P."
+    },
+    {
+        "character": "FRED",
+        "lines": "Don't be angry, uncle. Come! Dine with us tomorrow.",
+        "abbrev": false,
+        "encoded": "D b a, u. C! D w u t."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "You'd sooner see me dining in Timbuktu.",
+        "abbrev": false,
+        "encoded": "Y s s m d i T."
+    },
+    {
+        "character": "FRED",
+        "lines": "But why? Why?",
+        "abbrev": false,
+        "encoded": "B w? W?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Why did you get married?",
+        "abbrev": false,
+        "encoded": "W d y g m?"
+    },
+    {
+        "character": "FRED",
+        "lines": "Because I fell in love.",
+        "abbrev": false,
+        "encoded": "B I f i l."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Because you fell in love! Good afternoon!",
+        "abbrev": false,
+        "encoded": "B y f i l! G a!"
+    },
+    {
+        "character": "FRED",
+        "lines": "Nay, uncle, but you never came to see me before that happened. Why give it as a reason for not coming now?",
+        "abbrev": false,
+        "encoded": "N, u, b y n c t s m b t h. W g i a a r f n c n?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Good afternoon.",
+        "abbrev": false,
+        "encoded": "G a."
+    },
+    {
+        "character": "FRED",
+        "lines": "I want nothing from you; I ask nothing of you; why cannot we be friends?",
+        "abbrev": false,
+        "encoded": "I w n f y; I a n o y; w c w b f?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Good afternoon!",
+        "abbrev": false,
+        "encoded": "G a!"
+    },
+    {
+        "character": "FRED",
+        "lines": "I am sorry, with all my heart, to find you so resolute. We have never had any quarrel to which I have been a party. But I have made the trial in homage to Christmas, and I'll keep my Christmas humor to the last. So A Merry Christmas, uncle!",
+        "abbrev": false,
+        "encoded": "I a s, w a m h, t f y s r. W h n h a q t w I h b a p. B I h m t t i h t C, a I k m C h t t l. S A M C, u!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Good afternoon!",
+        "abbrev": false,
+        "encoded": "G a!"
+    },
+    {
+        "character": "FRED",
+        "lines": "(To Cratchit) Merry Christmas, Bob.",
+        "abbrev": false,
+        "encoded": "(To Cratchit) M C, B."
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "Merry Christmas, Fred.",
+        "abbrev": false,
+        "encoded": "M C, F."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Good afternoon!!",
+        "abbrev": false,
+        "encoded": "G a!"
+    },
+    {
+        "character": "FRED",
+        "lines": "And A Happy New Year!",
+        "abbrev": false,
+        "encoded": "A A H N Y!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "(Throws the wreath at the door) Good afternoon!",
+        "abbrev": false,
+        "encoded": "(Throws the wreath at the door) G a!"
+    },
+    {
+        "character": "CHARITY SOLICITOR #1",
+        "lines": "Scrooge and Marley's, I believe. Have I the pleasure of addressing Mr. Scrooge, or Mr. Marley?",
+        "abbrev": false,
+        "encoded": "S a M, I b. H I t p o a M. S, o M. M?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Mr. Marley has been dead these seven years. He died seven years ago, this very night.",
+        "abbrev": false,
+        "encoded": "M. M h b d t s y. H d s y a, t v n."
+    },
+    {
+        "character": "CHARITY SOLICITOR #2",
+        "lines": "We have no doubt his liberality is well represented by his surviving partner.",
+        "abbrev": false,
+        "encoded": "W h n d h l i w r b h s p."
+    },
+    {
+        "character": "CHARITY SOLICITOR #1",
+        "lines": "At this festive season of the year, Mr. Scrooge, it is more than usually desirable that we should make some slight provision for the poor and destitute, who suffer greatly at the present time. Many thousands are in want of common necessaries; hundreds of thousands are in want of common comforts, sir.",
+        "abbrev": false,
+        "encoded": "A t f s o t y, M. S, i i m t u d t w s m s s p f t p a d, w s g a t p t. M t a i w o c n; h o t a i w o c c, s."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Are there no prisons?",
+        "abbrev": false,
+        "encoded": "A t n p?"
+    },
+    {
+        "character": "CHARITY SOLICITOR #2",
+        "lines": "Plenty of prisons.",
+        "abbrev": false,
+        "encoded": "P o p."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "And the Union workhouses? Are they still in operation?",
+        "abbrev": false,
+        "encoded": "A t U w? A t s i o?"
+    },
+    {
+        "character": "CHARITY SOLICITOR #1",
+        "lines": "They are. Still, I wish I could say they were not.",
+        "abbrev": false,
+        "encoded": "T a. S, I w I c s t w n."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "The Treadmill and the Poor Law are in full vigor, then?",
+        "abbrev": false,
+        "encoded": "T T a t P L a i f v, t?"
+    },
+    {
+        "character": "CHARITY SOLICITOR #2",
+        "lines": "Both very busy, sir.",
+        "abbrev": false,
+        "encoded": "B v b, s."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Oh! I was afraid, from what you said at first, that something had occurred to stop them in their useful course. I am very glad to hear it.",
+        "abbrev": false,
+        "encoded": "O! I w a, f w y s a f, t s h o t s t i t u c. I a v g t h i."
+    },
+    {
+        "character": "CHARITY SOLICITOR #1",
+        "lines": "Under the impression that they scarcely furnish cheer of mind or body to the multitude, a few of us are endeavoring to raise a fund to buy the Poor some meat and drink-",
+        "abbrev": false,
+        "encoded": "U t i t t s f c o m o b t t m, a f o u a e t r a f t b t P s m a d"
+    },
+    {
+        "character": "CHARITY SOLICITOR #2",
+        "lines": "-and means of warmth.",
+        "abbrev": false,
+        "encoded": "a m o w."
+    },
+    {
+        "character": "CHARITY SOLICITOR #1",
+        "lines": "We choose this time, because it is a time, of all others, when Want is keenly felt, and Abundance rejoices.",
+        "abbrev": false,
+        "encoded": "W c t t, b i i a t, o a o, w W i k f, a A r."
+    },
+    {
+        "character": "CHARITY SOLICITOR #2",
+        "lines": "What shall I put you down for?",
+        "abbrev": false,
+        "encoded": "W s I p y d f?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Nothing.",
+        "abbrev": false,
+        "encoded": "N."
+    },
+    {
+        "character": "CHARITY SOLICITOR #1",
+        "lines": "You wish to be anonymous?",
+        "abbrev": false,
+        "encoded": "Y w t b a?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "I wish to be left alone. Since you ask me what I wish, that is my answer. I don't make merry myself at Christmas and I can't afford to make idle people merry. I help to support the establishments I have mentioned -- they cost enough: and those who are badly off must go there.",
+        "abbrev": false,
+        "encoded": "I w t b l a. S y a m w I w, t i m a. I d m m m a C a I c a t m i p m. I h t s t e I h m t c e: a t w a b o m g t."
+    },
+    {
+        "character": "CHARITY SOLICITOR #2",
+        "lines": "Many can't go there; and many would rather die.",
+        "abbrev": false,
+        "encoded": "M c g t; a m w r d."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "If they would rather die, they had better do it, and decrease the surplus population. Besides -- excuse me -- I don't know that.",
+        "abbrev": false,
+        "encoded": "I t w r d, t h b d i, a d t s p. B e m I d k t."
+    },
+    {
+        "character": "CHARITY SOLICITOR #1",
+        "lines": "But you might know it.",
+        "abbrev": false,
+        "encoded": "B y m k i."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "It's not my business. It's enough for a man to understand his own business, and not to interfere with other people's. Mine occupies me constantly. Good afternoon!",
+        "abbrev": false,
+        "encoded": "I n m b. I e f a m t u h o b, a n t i w o p. M o m c. G a!"
+    },
+    {
+        "character": "YOUNG CAROLER",
+        "lines": "Oh holy night! The stars are brightly shining. It is the night -",
+        "abbrev": false,
+        "encoded": "O h n! T s a b s. I i t n"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "You'll want all day tomorrow, I suppose?",
+        "abbrev": false,
+        "encoded": "Y w a d t, I s?"
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "If quite convenient, sir.",
+        "abbrev": false,
+        "encoded": "I q c, s."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "It's not convenient and it's not fair. If I was to stop half-a-crown for it, you'd think yourself ill-used, I'll be bound.",
+        "abbrev": false,
+        "encoded": "I n c a i n f. I I w t s h a c f i, y t y i u, I b b."
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "It's only once a year, sir.",
+        "abbrev": false,
+        "encoded": "I o o a y, s."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "A poor excuse for picking a man's pocket every twenty-fifth of December! But I suppose you must have the whole day. Be here all the earlier next morning.",
+        "abbrev": false,
+        "encoded": "A p e f p a m p e t f o D! B I s y m h t w d. B h a t e n m."
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "I will, sir!",
+        "abbrev": false,
+        "encoded": "I w, s!"
+    },
+    {
+        "character": "YOUNG CAROLER",
+        "lines": "Oh holy night -",
+        "abbrev": false,
+        "encoded": "O h n"
+    },
+    {
+        "character": "ADULT CAROLER",
+        "lines": "O Holy night! The stars are brightly shining",
+        "abbrev": false,
+        "encoded": "O H n! T s a b s"
+    },
+    {
+        "character": "ADULT CAROLER",
+        "lines": "It is the night of our dear Savior's birth",
+        "abbrev": false,
+        "encoded": "I i t n o o d S b"
+    },
+    {
+        "character": "ADULT CAROLER",
+        "lines": "Long lay the world in sin and error pining",
+        "abbrev": false,
+        "encoded": "L l t w i s a e p"
+    },
+    {
+        "character": "ADULT CAROLER",
+        "lines": "'Til He appeared and the soul felt its worth",
+        "abbrev": false,
+        "encoded": "'Til H a a t s f i w"
+    },
+    {
+        "character": "ADULT CAROLER",
+        "lines": "A thrill of hope the weary world rejoices",
+        "abbrev": false,
+        "encoded": "A t o h t w w r"
+    },
+    {
+        "character": "ADULT CAROLER",
+        "lines": "For yonder breaks a new and glorious morn",
+        "abbrev": false,
+        "encoded": "F y b a n a g m"
+    },
+    {
+        "character": "ADULT CAROLER",
+        "lines": "Fall on your knees; O hear the Angel voices!",
+        "abbrev": false,
+        "encoded": "F o y k; O h t A v!"
+    },
+    {
+        "character": "ADULT CAROLER",
+        "lines": "O night divine, O night when Christ was born",
+        "abbrev": false,
+        "encoded": "O n d, O n w C w b"
+    },
+    {
+        "character": "ADULT CAROLER",
+        "lines": "O night, O Holy night, O night divine!",
+        "abbrev": false,
+        "encoded": "O n, O H n, O n d!"
+    },
+    {
+        "character": "MARLEY",
+        "lines": "Scrooge.",
+        "abbrev": false,
+        "encoded": "S."
+    },
+    {
+        "character": "MARLEY",
+        "lines": "SCROOGE!",
+        "abbrev": false,
+        "encoded": "S!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Hmph. Humbug!",
+        "abbrev": false,
+        "encoded": "H. H!"
+    },
+    {
+        "character": "NARRATOR",
+        "lines": "Let it be borne in mind that Scrooge had not bestowed one thought on Marley since his last mention of his seven-years'-dead partner that afternoon. He lived in chambers which had once belonged to his deceased partner. They were a gloomy suite of rooms, in a lowering pile of building up a yard, where it had so little business to be, that one could scarcely help fancying it must have run there when it was a young house, playing at hide-and-seek with other houses, and have forgotten the way out again. It was old enough now, and dreary enough; for nobody lived in it but Scrooge. Half-a-dozen gas-lamps out of the street wouldn't have lighted the entry too well; but up Scrooge went, not caring a button for that. Darkness is cheap, and Scrooge liked it. As he readied himself for bed, the sound of his old partner's voice echoed in his head, occupying his thoughts moreso than any other. But Scrooge was not a man to be frightened by echoes. He continued in his usual routine, outwardly unaffected by the recent oddity he had witnessed. However, there was a certain, almost-imperceptible nervousness which tinged Scrooge's demeanor as he sat down before the fire to take his dinner. It was a very low fire indeed; nothing on such a bitter night. He was obliged to sit close to it, and brood over it, before he could extract the least sensation of warmth from such a handful of fuel. As he took his dinner in the chair, his glance happened to rest upon a bell, a disused bell, that hung in the room, and communicated, for some purpose now forgotten, with a chamber in the highest story of the building.",
+        "abbrev": false,
+        "encoded": "L i b b i m t S h n b o t o M s h l m o h s y d p t a. H l i c w h o b t h d p. T w a g s o r, i a l p o b u a y, w i h s l b t b, t o c s h f i m h r t w i w a y h, p a h a s w o h, a h f t w o a. I w o e n, a d e; f n l i i b S. H a d g l o o t s w h l t e t w; b u S w, n c a b f t. D i c, a S l i. A h r h f b, t s o h o p v e i h h, o h t m t a o. B S w n a m t b f b e. H c i h u r, o u b t r o h h w. H, t w a c, a i n w t S d a h s d b t f t t h d. I w a v l f i; n o s a b n. H w o t s c t i, a b o i, b h c e t l s o w f s a h o f. A h t h d i t c, h g h t r u a b, a d b, t h i t r, a c, f s p n f, w a c i t h s o t b."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "It's humbug still! I won't believe it.",
+        "abbrev": false,
+        "encoded": "I h s! I w b i."
+    },
+    {
+        "character": "MARLEY",
+        "lines": "SCROOGE!",
+        "abbrev": false,
+        "encoded": "S!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "How now! What do you want with me?",
+        "abbrev": false,
+        "encoded": "H n! W d y w w m?"
+    },
+    {
+        "character": "MARLEY",
+        "lines": "Much!",
+        "abbrev": false,
+        "encoded": "M!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Who are you?",
+        "abbrev": false,
+        "encoded": "W a y?"
+    },
+    {
+        "character": "MARLEY",
+        "lines": "Ask me who I was.",
+        "abbrev": false,
+        "encoded": "A m w I w."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "You're particular for a shade. Who were you then?",
+        "abbrev": false,
+        "encoded": "Y p f a s. W w y t?"
+    },
+    {
+        "character": "MARLEY",
+        "lines": "In life I was your partner, Jacob Marley.",
+        "abbrev": false,
+        "encoded": "I l I w y p, J M."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Can you -- can you sit down?",
+        "abbrev": false,
+        "encoded": "C y c y s d?"
+    },
+    {
+        "character": "MARLEY",
+        "lines": "I can.",
+        "abbrev": false,
+        "encoded": "I c."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Do it, then.",
+        "abbrev": false,
+        "encoded": "D i, t."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Very well.",
+        "abbrev": false,
+        "encoded": "V w."
+    },
+    {
+        "character": "MARLEY",
+        "lines": "You don't believe in me.",
+        "abbrev": false,
+        "encoded": "Y d b i m."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "I don't.",
+        "abbrev": false,
+        "encoded": "I d."
+    },
+    {
+        "character": "MARLEY",
+        "lines": "What evidence would you have of my reality beyond that of your own senses?",
+        "abbrev": false,
+        "encoded": "W e w y h o m r b t o y o s?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "I don't know.",
+        "abbrev": false,
+        "encoded": "I d k."
+    },
+    {
+        "character": "MARLEY",
+        "lines": "Why do you doubt your senses?",
+        "abbrev": false,
+        "encoded": "W d y d y s?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Because a little thing affects them. A slight disorder of the stomach makes them cheats. You may be an undigested bit of beef, a blot of mustard, a crumb of cheese, a fragment of an underdone potato. There's more of gravy than of grave about you, whatever you are! (Beat) You see this toothpick.",
+        "abbrev": false,
+        "encoded": "B a l t a t. A s d o t s m t c. Y m b a u b o b, a b o m, a c o c, a f o a u p. T m o g t o g a y, w y a! (Beat) Y s t t."
+    },
+    {
+        "character": "MARLEY",
+        "lines": "I do.",
+        "abbrev": false,
+        "encoded": "I d."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "You are not looking at it.",
+        "abbrev": false,
+        "encoded": "Y a n l a i."
+    },
+    {
+        "character": "MARLEY",
+        "lines": "But I see it, notwithstanding.",
+        "abbrev": false,
+        "encoded": "B I s i, n."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Well! I have but to swallow this, and be for the rest of my days persecuted by a legion of goblins, all of my own creation. Humbug, I tell you: humbug!",
+        "abbrev": false,
+        "encoded": "W! I h b t s t, a b f t r o m d p b a l o g, a o m o c. H, I t y: h!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Mercy! Dreadful apparition, why do you trouble me?",
+        "abbrev": false,
+        "encoded": "M! D a, w d y t m?"
+    },
+    {
+        "character": "MARLEY",
+        "lines": "Man of the worldly mind! Do you believe in me or not?",
+        "abbrev": false,
+        "encoded": "M o t w m! D y b i m o n?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "I do. I must. But why do spirits walk the earth, and why do they come to me?",
+        "abbrev": false,
+        "encoded": "I d. I m. B w d s w t e, a w d t c t m?"
+    },
+    {
+        "character": "MARLEY",
+        "lines": "It is required of every man, that the spirit within him should walk abroad among his fellow-men, and travel far and wide; and, if that spirit goes not forth in life, it is condemned to do so after death. It is doomed to wander through the world--oh, woe is me!--and witness what it cannot share, but might have shared on earth and turned to happiness!",
+        "abbrev": false,
+        "encoded": "I i r o e m, t t s w h s w a a h f m, a t f a w; a, i t s g n f i l, i i c t d s a d. I i d t w t t w o, w i m! a w w i c s, b m h s o e a t t h!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "You are fettered. Tell me why?",
+        "abbrev": false,
+        "encoded": "Y a f. T m w?"
+    },
+    {
+        "character": "MARLEY",
+        "lines": "I wear the chain I forged in life. I made it link by link, and yard by yard; I girded it on of my own free will, and of my own free will I wore it. Is its pattern strange to you?",
+        "abbrev": false,
+        "encoded": "I w t c I f i l. I m i l b l, a y b y; I g i o o m o f w, a o m o f w I w i. I i p s t y?"
+    },
+    {
+        "character": "MARLEY",
+        "lines": "Or would you know the weight and length of the strong coil you bear yourself? It was full as heavy and as long as this seven Christmas Eves ago. You have labored on it since. It is a ponderous chain!",
+        "abbrev": false,
+        "encoded": "O w y k t w a l o t s c y b y? I w f a h a a l a t s C E a. Y h l o i s. I i a p c!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Jacob! Old Jacob Marley, tell me more! Speak comfort to me, Jacob!",
+        "abbrev": false,
+        "encoded": "J! O J M, t m m! S c t m, J!"
+    },
+    {
+        "character": "MARLEY",
+        "lines": "I have none to give. It comes from other regions, Ebenezer Scrooge, and is conveyed by other ministers, to other kinds of men. I cannot rest, I cannot stay, I cannot linger anywhere. My spirit never walked beyond our counting house--mark me;--in life my spirit never roved beyond the narrow limits of our money-changing hole; and weary journeys lie before me!",
+        "abbrev": false,
+        "encoded": "I h n t g. I c f o r, E S, a i c b o m, t o k o m. I c r, I c s, I c l a. M s n w b o c h m m; i l m s n r b t n l o o m c h; a w j l b m!"
+    },
+    {
+        "character": "MARLEY",
+        "lines": "Oh! captive, bound and double-ironed, not to know that no space of regret can make amends for one life's opportunities misused! Yet such was I! Oh, such was I!",
+        "abbrev": false,
+        "encoded": "O! c, b a d i, n t k t n s o r c m a f o l o m! Y s w I! O, s w I!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "But you were always a good man of business, Jacob.",
+        "abbrev": false,
+        "encoded": "B y w a a g m o b, J."
+    },
+    {
+        "character": "MARLEY",
+        "lines": "Business! Mankind was my business. The common welfare was my business; charity, mercy, forbearance, and benevolence were, all, my business.",
+        "abbrev": false,
+        "encoded": "B! M w m b. T c w w m b; c, m, f, a b w, a, m b."
+    },
+    {
+        "character": "MARLEY",
+        "lines": "At this time of the rolling year, I suffer most. Why did I walk through crowds of fellow-beings with my eyes turned down, and never raise them to the heavens. Were there no poor homes to which the light of compassion would have conducted me?",
+        "abbrev": false,
+        "encoded": "A t t o t r y, I s m. W d I w t c o f b w m e t d, a n r t t t h. W t n p h t w t l o c w h c m?"
+    },
+    {
+        "character": "MARLEY",
+        "lines": "Hear me! My time is nearly gone.",
+        "abbrev": false,
+        "encoded": "H m! M t i n g."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "I will. But don't be hard upon me, Jacob!",
+        "abbrev": false,
+        "encoded": "I w. B d b h u m, J!"
+    },
+    {
+        "character": "MARLEY",
+        "lines": "How it is that I appear before you in a shape that you can see, I may not tell. I have sat invisible beside you many and many a day.",
+        "abbrev": false,
+        "encoded": "H i i t I a b y i a s t y c s, I m n t. I h s i b y m a m a d."
+    },
+    {
+        "character": "MARLEY",
+        "lines": "That is no light part of my penance. I am here tonight to warn you that you have yet a chance and hope of escaping my fate. A chance and hope of my procuring, Ebenezer.",
+        "abbrev": false,
+        "encoded": "T i n l p o m p. I a h t t w y t y h y a c a h o e m f. A c a h o m p, E."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "You were always a good friend to me. Thankee!",
+        "abbrev": false,
+        "encoded": "Y w a a g f t m. T!"
+    },
+    {
+        "character": "MARLEY",
+        "lines": "You will be haunted by Three Spirits.",
+        "abbrev": false,
+        "encoded": "Y w b h b T S."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Is that the chance and hope you mentioned, Jacob?",
+        "abbrev": false,
+        "encoded": "I t t c a h y m, J?"
+    },
+    {
+        "character": "MARLEY",
+        "lines": "It is.",
+        "abbrev": false,
+        "encoded": "I i."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "(Beat) I think I'd rather not.",
+        "abbrev": false,
+        "encoded": "(Beat) I t I r n."
+    },
+    {
+        "character": "MARLEY",
+        "lines": "Without their visits, you cannot hope to shun the path I tread.",
+        "abbrev": false,
+        "encoded": "W t v, y c h t s t p I t."
+    },
+    {
+        "character": "MARLEY",
+        "lines": "Expect the first when the bell tolls one.",
+        "abbrev": false,
+        "encoded": "E t f w t b t o."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Couldn't I take 'em all at once, and have it over, Jacob?",
+        "abbrev": false,
+        "encoded": "C I t 'em a a o, a h i o, J?"
+    },
+    {
+        "character": "MARLEY",
+        "lines": "Expect the second at two. The third, when the last stroke of three has ceased to vibrate.",
+        "abbrev": false,
+        "encoded": "E t s a t. T t, w t l s o t h c t v."
+    },
+    {
+        "character": "MARLEY",
+        "lines": "",
+        "abbrev": false,
+        "encoded": ""
+    },
+    {
+        "character": "MARLEY",
+        "lines": "(Looking back at Scrooge) Look to see me no more; and look that, for your own sake, you remember what has passed between us!",
+        "abbrev": false,
+        "encoded": "(Looking back at Scrooge) L t s m n m; a l t, f y o s, y r w h p b u!"
+    },
+    {
+        "character": "MARLEY",
+        "lines": "(Hauntingly) Expect the first when the bell tolls one...",
+        "abbrev": false,
+        "encoded": "(Hauntingly) E t f w t b t o."
+    },
+    {
+        "character": "NARRATOR",
+        "lines": "Scrooge lay in bed and thought, and thought, and thought it over and over, and could make nothing of it. The more he thought, the more perplexed he was; and, the more he endeavored not to think, the more he thought. Marley's Ghost bothered him exceedingly. Every time he resolved within himself, after mature inquiry that it was all a dream, his mind flew back again, like a strong spring released, to its first position, and presented the same problem to be worked all through, 'Was it a dream or not?' Until, from the emotions he had undergone, or the fatigues of the day, or his glimpse of the Invisible World, or the lateness of the hour, Scrooge fell asleep upon the instant.",
+        "abbrev": false,
+        "encoded": "S l i b a t, a t, a t i o a o, a c m n o i. T m h t, t m p h w; a, t m h e n t t, t m h t. M G b h e. E t h r w h, a m i t i w a a d, h m f b a, l a s s r, t i f p, a p t s p t b w a t, 'Was i a d o n U, f t e h h u, o t f o t d, o h g o t I W, o t l o t h, S f a u t i."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "A quarter past.",
+        "abbrev": false,
+        "encoded": "A q p."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Half past.",
+        "abbrev": false,
+        "encoded": "H p."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "A quarter to it!",
+        "abbrev": false,
+        "encoded": "A q t i!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "The hour itself and nothing else!",
+        "abbrev": false,
+        "encoded": "T h i a n e!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Are you the Spirit, sir, whose coming was foretold to me?",
+        "abbrev": false,
+        "encoded": "A y t S, s, w c w f t m?"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "I am!",
+        "abbrev": false,
+        "encoded": "I a!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Who and what are you?",
+        "abbrev": false,
+        "encoded": "W a w a y?"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "I am the Ghost of Christmas Past.",
+        "abbrev": false,
+        "encoded": "I a t G o C P."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Long past?",
+        "abbrev": false,
+        "encoded": "L p?"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "No. Your past.",
+        "abbrev": false,
+        "encoded": "N. Y p."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Spirit, if it is quite convenient, would you mind covering your light? It's a bit harsh on the senses.",
+        "abbrev": false,
+        "encoded": "S, i i i q c, w y m c y l? I a b h o t s."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "What! Would you so soon put out, with worldly hands, the light I give? Is it not enough that you are one of those whose passions made this cap, and force me through whole trains of years to wear it low upon my brow?",
+        "abbrev": false,
+        "encoded": "W! W y s s p o, w w h, t l I g? I i n e t y a o o t w p m t c, a f m t w t o y t w i l u m b?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Please forgive me, spirit, it was not my intention to offend, nor bonnet you at any period of my life. What business has brought you here?",
+        "abbrev": false,
+        "encoded": "P f m, s, i w n m i t o, n b y a a p o m l. W b h b y h?"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "Your welfare!",
+        "abbrev": false,
+        "encoded": "Y w!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Much obliged. Though, I have to think a night of unbroken rest would have been more beneficial to my welfare.",
+        "abbrev": false,
+        "encoded": "M o. T, I h t t a n o u r w h b m b t m w."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "Your reclamation, then. Take heed!",
+        "abbrev": false,
+        "encoded": "Y r, t. T h!"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "Rise! and walk with me!",
+        "abbrev": false,
+        "encoded": "R! a w w m!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "I am a mortal and liable to fall.",
+        "abbrev": false,
+        "encoded": "I a a m a l t f."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "Bear but a touch of my hand there (lays it on his heart) and you shall be upheld in more than this!",
+        "abbrev": false,
+        "encoded": "B b a t o m h t (lays it on his heart) a y s b u i m t t!"
+    },
+    {
+        "character": "NARRATOR",
+        "lines": "As the words were spoken, they passed through the wall. The city had entirely vanished. Not a vestige of it was to be seen. The darkness and the mist had vanished with it, for it was a clear, cold, winter day, with snow upon the ground. They stood upon an open country road, with fields on either hand.",
+        "abbrev": false,
+        "encoded": "A t w w s, t p t t w. T c h e v. N a v o i w t b s. T d a t m h v w i, f i w a c, c, w d, w s u t g. T s u a o c r, w f o e h."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Good Heaven! I was a boy here!",
+        "abbrev": false,
+        "encoded": "G H! I w a b h!"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "You recollect the way?",
+        "abbrev": false,
+        "encoded": "Y r t w?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Remember it? I could walk it blindfold.",
+        "abbrev": false,
+        "encoded": "R i? I c w i b."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "Strange to have forgotten it for so many years! Let us go on.",
+        "abbrev": false,
+        "encoded": "S t h f i f s m y! L u g o."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Look its Benjamin! Hello Benjamin! And there's his sister, Henrietta. Hello Henrietta!",
+        "abbrev": false,
+        "encoded": "L i B! H B! A t h s, H. H H!"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "These are but shadows of the things that have been. They have no consciousness of us.",
+        "abbrev": false,
+        "encoded": "T a b s o t t t h b. T h n c o u."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "The school is not quite deserted. A solitary child, neglected by his friends, is left there still.",
+        "abbrev": false,
+        "encoded": "T s i n q d. A s c, n b h f, i l t s."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "I know it.",
+        "abbrev": false,
+        "encoded": "I k i."
+    },
+    {
+        "character": "NARRATOR",
+        "lines": "They left the high-road by a well-remembered lane and soon approached a mansion of dull red brick, with a little weather-cock surmounted cupola on the roof, and a bell hanging in it. It was a large house, but one of broken fortunes; for the spacious offices were little used, their walls were damp and mossy, their windows broken, and their gates decayed. It opened before them, and disclosed a long, bare, melancholy room, made barer still by lines of plain deal forms and desks. At one of these a lonely boy was reading near a feeble fire.",
+        "abbrev": false,
+        "encoded": "T l t h r b a w r l a s a a m o d r b, w a l w c s c o t r, a a b h i i. I w a l h, b o o b f; f t s o w l u, t w w d a m, t w b, a t g d. I o b t, a d a l, b, m r, m b s b l o p d f a d. A o o t a l b w r n a f f."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "I spent much time on my own. I did not mind it, though. I had my books, and they took me on adventures.",
+        "abbrev": false,
+        "encoded": "I s m t o m o. I d n m i, t. I h m b, a t t m o a."
+    },
+    {
+        "character": "SCHOOLMASTER",
+        "lines": "There you are, Master Scrooge. You must hurry if you are going to catch a carriage home for Christmas.",
+        "abbrev": false,
+        "encoded": "T y a, M S. Y m h i y a g t c a c h f C."
+    },
+    {
+        "character": "BOY SCROOGE",
+        "lines": "I am not going home for Christmas.",
+        "abbrev": false,
+        "encoded": "I a n g h f C."
+    },
+    {
+        "character": "SCHOOLMASTER",
+        "lines": "That's right, I quite forgot, all the children go home for Christmas except for young Master Scrooge.",
+        "abbrev": false,
+        "encoded": "T r, I q f, a t c g h f C e f y M S."
+    },
+    {
+        "character": "BOY SCROOGE",
+        "lines": "It gives me more time to read.",
+        "abbrev": false,
+        "encoded": "I g m m t t r."
+    },
+    {
+        "character": "SCHOOLMASTER",
+        "lines": "Right you are. Use this extra time to study and you will be a man of business. What are you reading?",
+        "abbrev": false,
+        "encoded": "R y a. U t e t t s a y w b a m o b. W a y r?"
+    },
+    {
+        "character": "BOY SCROOGE",
+        "lines": "\"The Thousand and One Nights.\" It is very exciting! There's Ali Baba! And Valentine and his wild brother Orson; and what's his name, who was put down in his drawers, asleep, at the Gate of Damascus. And the Sultan's Groom turned upside-down by the Genie!",
+        "abbrev": false,
+        "encoded": "T T a O N. I i v e! T A B! A V a h w b O; a w h n, w w p d i h d, a, a t G o D. A t S G t u d b t G!"
+    },
+    {
+        "character": "SCHOOLMASTER",
+        "lines": "No, this will never do. You will never be a man of business wasting your time with such nonsense.",
+        "abbrev": false,
+        "encoded": "N, t w n d. Y w n b a m o b w y t w s n."
+    },
+    {
+        "character": "SCHOOLMASTER",
+        "lines": "\"Thomas Aquinas' Summa Theologica Treatise and the Impact it has on the Pricing of Haggis.\"",
+        "abbrev": false,
+        "encoded": "T A S T T a t I i h o t P o H."
+    },
+    {
+        "character": "BOY SCROOGE",
+        "lines": "Thank you, Schoolmaster.",
+        "abbrev": false,
+        "encoded": "T y, S."
+    },
+    {
+        "character": "SCHOOLMASTER",
+        "lines": "\"The Influence of Sir Thomas More on the English Poor Laws and Dollymops.\"",
+        "abbrev": false,
+        "encoded": "T I o S T M o t E P L a D."
+    },
+    {
+        "character": "BOY SCROOGE",
+        "lines": "Thank you.",
+        "abbrev": false,
+        "encoded": "T y."
+    },
+    {
+        "character": "SCHOOLMASTER",
+        "lines": "And you must have this one.",
+        "abbrev": false,
+        "encoded": "A y m h t o."
+    },
+    {
+        "character": "BOY SCROOGE",
+        "lines": "\"Hill's Manual of Social Business Forms, Safe Methods of Commerce, and Strategic Initiatives for Strumpets and Lollygaggers.\"",
+        "abbrev": false,
+        "encoded": "H M o S B F, S M o C, a S I f S a L."
+    },
+    {
+        "character": "SCHOOLMASTER",
+        "lines": "It's the only book you will ever need. Along with the other two. Oh, and these ones.",
+        "abbrev": false,
+        "encoded": "I t o b y w e n. A w t o t. O, a t o."
+    },
+    {
+        "character": "BOY SCROOGE",
+        "lines": "Thank you, Schoolmaster.",
+        "abbrev": false,
+        "encoded": "T y, S."
+    },
+    {
+        "character": "SCHOOLMASTER",
+        "lines": "You may never know love in your life, sad child. But become good at business and you will at least know respect.",
+        "abbrev": false,
+        "encoded": "Y m n k l i y l, s c. B b g a b a y w a l k r."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Poor boy. (Beat) I wish... but it's too late now.",
+        "abbrev": false,
+        "encoded": "P b. (Beat) I w. b i t l n."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "What is the matter?",
+        "abbrev": false,
+        "encoded": "W i t m?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Nothing. Nothing. There was a girl singing a Christmas carol at my door last night. I should like to have given her something: that's all.",
+        "abbrev": false,
+        "encoded": "N. N. T w a g s a C c a m d l n. I s l t h g h s: t a."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "Let us see another Christmas!",
+        "abbrev": false,
+        "encoded": "L u s a C!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "They were all very much the same.",
+        "abbrev": false,
+        "encoded": "T w a v m t s."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "There was a special Christmas that took place here.",
+        "abbrev": false,
+        "encoded": "T w a s C t t p h."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Oh, spirit.",
+        "abbrev": false,
+        "encoded": "O, s."
+    },
+    {
+        "character": "FAN",
+        "lines": "Dear, dear brother. I have come to bring you home, dear brother! (She claps her hands and bends down to laugh) To bring you home, home, home!",
+        "abbrev": false,
+        "encoded": "D, d b. I h c t b y h, d b! (She claps her hands and bends down to laugh) T b y h, h, h!"
+    },
+    {
+        "character": "BOY SCROOGE",
+        "lines": "Home, little Fan?",
+        "abbrev": false,
+        "encoded": "H, l F?"
+    },
+    {
+        "character": "FAN",
+        "lines": "Yes! Home for good and all. Home for ever and ever. Father is so much kinder than he used to be, that home's like heaven! He spoke so gently to me one dear night when I was going to bed, that I was not afraid to ask him once more if you might come home; and he said 'Yes, you should' and sent me in a coach to bring you. And you're to be a man! And are never to come back here; but first we're to be together all the Christmas long, and have the merriest time in all the world.",
+        "abbrev": false,
+        "encoded": "Y! H f g a a. H f e a e. F i s m k t h u t b, t h l h! H s s g t m o d n w I w g t b, t I w n a t a h o m i y m c h; a h s 'Yes, y s a s m i a c t b y. A y t b a m! A a n t c b h; b f w t b t a t C l, a h t m t i a t w."
+    },
+    {
+        "character": "BOY SCROOGE",
+        "lines": "You are quite a woman, little Fan!",
+        "abbrev": false,
+        "encoded": "Y a q a w, l F!"
+    },
+    {
+        "character": "FAN",
+        "lines": "Come on, Ebenezer, let's go home.",
+        "abbrev": false,
+        "encoded": "C o, E, l g h."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "Always a delicate creature, whom a breath might have withered. But she had a large heart!",
+        "abbrev": false,
+        "encoded": "A a d c, w a b m h w. B s h a l h!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "So she had. You're right. I'll not gainsay it, Spirit. God forbid!",
+        "abbrev": false,
+        "encoded": "S s h. Y r. I n g i, S. G f!"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "She died a woman, and had, as I think, children.",
+        "abbrev": false,
+        "encoded": "S d a w, a h, a I t, c."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "One child.",
+        "abbrev": false,
+        "encoded": "O c."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "True. Your nephew!",
+        "abbrev": false,
+        "encoded": "T. Y n!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "(Uneasy) Yes.",
+        "abbrev": false,
+        "encoded": "(Uneasy) Y."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "Let us see another Christmas.",
+        "abbrev": false,
+        "encoded": "L u s a C."
+    },
+    {
+        "character": "NARRATOR",
+        "lines": "Although they had but that moment left the school behind them, they were now in the busy thoroughfares of a city, where shadowy passengers passed and re-passed; where shadowy carts and coaches battled for the way, and all the strife and tumult of a real city were. It was made plain enough, by the dressing of the shops, that here, too, it was Christmas-time again; but it was evening, and the streets were lighted up. The Ghost stopped at a certain warehouse door.",
+        "abbrev": false,
+        "encoded": "A t h b t m l t s b t, t w n i t b t o a c, w s p p a r p; w s c a c b f t w, a a t s a t o a r c w. I w m p e, b t d o t s, t h, t, i w C t a; b i w e, a t s w l u. T G s a a c w d."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "Do you know this warehouse?",
+        "abbrev": false,
+        "encoded": "D y k t w?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Know it! I was apprenticed here!",
+        "abbrev": false,
+        "encoded": "K i! I w a h!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "(Excited) Why, it's old Fezziwig! Bless his heart, it's Fezziwig alive again!",
+        "abbrev": false,
+        "encoded": "(Excited) W, i o F! B h h, i F a a!"
+    },
+    {
+        "character": "FEZZIWIG",
+        "lines": "Yo ho, there! Ebenezer! Dick!",
+        "abbrev": false,
+        "encoded": "Y h, t! E! D!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Dick Wilkins, to be sure! Bless me, yes. There he is. He was very much attached to me, was Dick. Poor Dick! Dear, dear!",
+        "abbrev": false,
+        "encoded": "D W, t b s! B m, y. T h i. H w v m a t m, w D. P D! D, d!"
+    },
+    {
+        "character": "FEZZIWIG",
+        "lines": "Yo ho, my boys! No more work tonight. Christmas Eve, Dick. Christmas, Ebenezer! Let's have the shutters up before a man can say, \"Jack Robinson!\"",
+        "abbrev": false,
+        "encoded": "Y h, m b! N m w t. C E, D. C, E! L h t s u b a m c s, J R!"
+    },
+    {
+        "character": "FEZZIWIG",
+        "lines": "Jack Robinson!!! Oh, ho ho, just teasing boys. Christmas, ay - such fun. Hilli-ho! Clear away my lads, and let's have lots of room here. We'll have merry-making tonight!",
+        "abbrev": false,
+        "encoded": "J R! O, h h, j t b. C, a s f. H h! C a m l, a l h l o r h. W h m m t!"
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "I've been meaning to discuss the musician with you, Mr. Fezziwig; he will cost us at least two pounds.",
+        "abbrev": false,
+        "encoded": "I b m t d t m w y, M. F; h w c u a l t p."
+    },
+    {
+        "character": "FEZZIWIG",
+        "lines": "Chuckaboo - what's a pound or two when we are having a nanty narking good time.",
+        "abbrev": false,
+        "encoded": "C w a p o t w w a h a n n g t."
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "Yes sir, could I have the money now, it is hard to get your attention once the party revelers arrive.",
+        "abbrev": false,
+        "encoded": "Y s, c I h t m n, i i h t g y a o t p r a."
+    },
+    {
+        "character": "FEZZIWIG",
+        "lines": "Yes, it just it seems like....(Starts patting down his body) I forgot to pack my purse with me.",
+        "abbrev": false,
+        "encoded": "Y, i j i s l. (Starts patting down his body) I f t p m p w m."
+    },
+    {
+        "character": "DICK WILKINS",
+        "lines": "(To Scrooge) Must he do this every time?",
+        "abbrev": false,
+        "encoded": "(To Scrooge) M h d t e t?"
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "You know he does.",
+        "abbrev": false,
+        "encoded": "Y k h d."
+    },
+    {
+        "character": "FEZZIWIG",
+        "lines": "But what's this?",
+        "abbrev": false,
+        "encoded": "B w t?"
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "Very good, sir.",
+        "abbrev": false,
+        "encoded": "V g, s."
+    },
+    {
+        "character": "FEZZIWIG",
+        "lines": "But this isn't enough to cover the musician... Dick, be a good lad and lend me your ear.",
+        "abbrev": false,
+        "encoded": "B t i e t c t m. D, b a g l a l m y e."
+    },
+    {
+        "character": "FEZZIWIG",
+        "lines": "Here you are! Two pounds.",
+        "abbrev": false,
+        "encoded": "H y a! T p."
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "Thank you, sir.",
+        "abbrev": false,
+        "encoded": "T y, s."
+    },
+    {
+        "character": "DICK WILKINS",
+        "lines": "Sir, Ebenezer and I were discussing the finances for the party, and perhaps it would make more sense in the future to only have one Christmas tree.",
+        "abbrev": false,
+        "encoded": "S, E a I w d t f f t p, a p i w m m s i t f t o h o C t."
+    },
+    {
+        "character": "FEZZIWIG",
+        "lines": "One Christmas tree?",
+        "abbrev": false,
+        "encoded": "O C t?"
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "There seems to be no reason to have two.",
+        "abbrev": false,
+        "encoded": "T s t b n r t h t."
+    },
+    {
+        "character": "FEZZIWIG",
+        "lines": "Darling, angel, dearest, precious treasure, you will not believe what the boys just said.",
+        "abbrev": false,
+        "encoded": "D, a, d, p t, y w n b w t b j s."
+    },
+    {
+        "character": "MRS. FEZZIWIG",
+        "lines": "That they are finally getting married to some nice young women? Of course they did not. They would not be looking so morose and needy if they had.",
+        "abbrev": false,
+        "encoded": "T t a f g m t s n y w? O c t d n. T w n b l s m a n i t h."
+    },
+    {
+        "character": "FEZZIWIG",
+        "lines": "They said we should only have one Christmas tree next year.",
+        "abbrev": false,
+        "encoded": "T s w s o h o C t n y."
+    },
+    {
+        "character": "MRS. FEZZIWIG",
+        "lines": "Only one Christmas tree? Only one? Heaven protect me. I would rather wear a cat as a bonnet than only have one Christmas tree.",
+        "abbrev": false,
+        "encoded": "O o C t? O o? H p m. I w r w a c a a b t o h o C t."
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "But the second one serves no purpose.",
+        "abbrev": false,
+        "encoded": "B t s o s n p."
+    },
+    {
+        "character": "MRS. FEZZIWIG",
+        "lines": "Serves no purpose?!? Serves no purpose?!?! Why do you think we have a Christmas tree?",
+        "abbrev": false,
+        "encoded": "S n p? S n p! W d y t w h a C t?"
+    },
+    {
+        "character": "DICK WILKINS",
+        "lines": "We aren't saying to get rid of both of them.",
+        "abbrev": false,
+        "encoded": "W a s t g r o b o t."
+    },
+    {
+        "character": "MRS. FEZZIWIG",
+        "lines": "My hearing is perfectly fine young man, now answer my question.",
+        "abbrev": false,
+        "encoded": "M h i p f y m, n a m q."
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "For Christmas cheer.",
+        "abbrev": false,
+        "encoded": "F C c."
+    },
+    {
+        "character": "DICK WILKINS",
+        "lines": "A place to put presents.",
+        "abbrev": false,
+        "encoded": "A p t p p."
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "A symbol for the season.",
+        "abbrev": false,
+        "encoded": "A s f t s."
+    },
+    {
+        "character": "MRS. FEZZIWIG",
+        "lines": "Good, now you understand how incredulous of a suggestion you made.",
+        "abbrev": false,
+        "encoded": "G, n y u h i o a s y m."
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "But why do you need two?",
+        "abbrev": false,
+        "encoded": "B w d y n t?"
+    },
+    {
+        "character": "MRS. FEZZIWIG",
+        "lines": "To have twice as much cheer. I thought you were supposed to be good at math.",
+        "abbrev": false,
+        "encoded": "T h t a m c. I t y w s t b g a m."
+    },
+    {
+        "character": "FEZZIWIG",
+        "lines": "Gigglemug, be easy on them, it is Christmas Eve.",
+        "abbrev": false,
+        "encoded": "G, b e o t, i i C E."
+    },
+    {
+        "character": "MRS. FEZZIWIG",
+        "lines": "You're right my little bag o'mystery.",
+        "abbrev": false,
+        "encoded": "Y r m l b o."
+    },
+    {
+        "character": "FEZZIWIG",
+        "lines": "Arfarfan'arf - what is that? A smudge on the window.",
+        "abbrev": false,
+        "encoded": "A w i t? A s o t w."
+    },
+    {
+        "character": "DICK WILKINS",
+        "lines": "Where?",
+        "abbrev": false,
+        "encoded": "W?"
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "I don't see one.",
+        "abbrev": false,
+        "encoded": "I d s o."
+    },
+    {
+        "character": "FEZZIWIG",
+        "lines": "I distinctly see a smudge upon the glass. Here, take my handkerchief and clean it up.",
+        "abbrev": false,
+        "encoded": "I d s a s u t g. H, t m h a c i u."
+    },
+    {
+        "character": "DICK WILKINS",
+        "lines": "I did it last time.",
+        "abbrev": false,
+        "encoded": "I d i l t."
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "Very well.",
+        "abbrev": false,
+        "encoded": "V w."
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "Very amusing, sir.",
+        "abbrev": false,
+        "encoded": "V a, s."
+    },
+    {
+        "character": "DICK WILKINS",
+        "lines": "Gets us every time.",
+        "abbrev": false,
+        "encoded": "G u e t."
+    },
+    {
+        "character": "FEZZIWIG",
+        "lines": "Welcome! Welcome everyone! Merry Christmas! We hope you are ready to dance.",
+        "abbrev": false,
+        "encoded": "W! W e! M C! W h y a r t d."
+    },
+    {
+        "character": "MRS. FEZZIWIG",
+        "lines": "But first you must give your Christmas speech!",
+        "abbrev": false,
+        "encoded": "B f y m g y C s!"
+    },
+    {
+        "character": "FEZZIWIG",
+        "lines": "Thank you for coming! It is so wonderful to see all your smiling faces and Dick Wilkins' face too. This is my favorite party that we throw, and the reason it is such a wonderful event is because of you. Now, I know I have a speech here somewhere (Fezziwig pats himself) Oh, I must have forgotten it. I'll just make it up out of thin air! (He creates a puff of smoke and the paper appears, he reads) Thank you for all your hard work and may the joy we celebrate tonight last us all the year!",
+        "abbrev": false,
+        "encoded": "T y f c! I i s w t s a y s f a D W f t. T i m f p t w t, a t r i i s a w e i b o y. N, I k I h a s h s (Fezziwig pats himself) O, I m h f i. I j m i u o o t a! (He creates a puff of smoke and the paper appears, he reads) T y f a y h w a m t j w c t l u a t y!"
+    },
+    {
+        "character": "MRS. FEZZIWIG",
+        "lines": "Belle! You made it! I am so pleased. Let me introduce you to my favorite morose young man, Ebenezer Scrooge. I only tease, he is not morose, he is only prone to a sullen and gloomy disposition of which you must fix him.",
+        "abbrev": false,
+        "encoded": "B! Y m i! I a s p. L m i y t m f m y m, E S. I o t, h i n m, h i o p t a s a g d o w y m f h."
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "Hello.",
+        "abbrev": false,
+        "encoded": "H."
+    },
+    {
+        "character": "BELLE",
+        "lines": "Hello.",
+        "abbrev": false,
+        "encoded": "H."
+    },
+    {
+        "character": "FEZZIWIG",
+        "lines": "Chirrup, Ebenezer, Belle - why, the party's just begun! (To Mrs. Fezziwig) My dearest jammiest bit of jam, might you be thirsty?",
+        "abbrev": false,
+        "encoded": "C, E, B w, t p j b! (To Mrs. Fezziwig) M d j b o j, m y b t?"
+    },
+    {
+        "character": "MRS. FEZZIWIG",
+        "lines": "I dare say, I am a bit parched, my little enthuzimuzzy.",
+        "abbrev": false,
+        "encoded": "I d s, I a a b p, m l e."
+    },
+    {
+        "character": "FEZZIWIG",
+        "lines": "Why, I have just the thing! A bit of mulled wine should do. But we wouldn't want you drinking it unfiltered, now would we? Better strain it first!",
+        "abbrev": false,
+        "encoded": "W, I h j t t! A b o m w s d. B w w w y d i u, n w w? B s i f!"
+    },
+    {
+        "character": "FEZZIWIG",
+        "lines": "Much better!",
+        "abbrev": false,
+        "encoded": "M b!"
+    },
+    {
+        "character": "FEZZIWIG",
+        "lines": "(Realizing he has no wine now) Well, didn't think that one through. Come, dear!",
+        "abbrev": false,
+        "encoded": "(Realizing he has no wine now) W, d t t o t. C, d!"
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "He does that often.",
+        "abbrev": false,
+        "encoded": "H d t o."
+    },
+    {
+        "character": "BELLE",
+        "lines": "So I've heard.",
+        "abbrev": false,
+        "encoded": "S I h."
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "Me too.",
+        "abbrev": false,
+        "encoded": "M t."
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "Mr. Fezziwig is quite wonderful. Spares no expense for festivities, and each year is better than the last!",
+        "abbrev": false,
+        "encoded": "M. F i q w. S n e f f, a e y i b t t l!"
+    },
+    {
+        "character": "BELLE",
+        "lines": "Indeed, the Fezziwigs' generosity knows no bounds.",
+        "abbrev": false,
+        "encoded": "I, t F g k n b."
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "Would you care to dance?",
+        "abbrev": false,
+        "encoded": "W y c t d?"
+    },
+    {
+        "character": "BELLE",
+        "lines": "Yes.",
+        "abbrev": false,
+        "encoded": "Y."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "A small matter to make these silly folks so full of gratitude.",
+        "abbrev": false,
+        "encoded": "A s m t m t s f s f o g."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Small?",
+        "abbrev": false,
+        "encoded": "S?"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "Why, is it not? He has spent but a few pounds of your mortal money: three or four, perhaps. Is that so much that he deserves this praise?",
+        "abbrev": false,
+        "encoded": "W, i i n? H h s b a f p o y m m: t o f, p. I t s m t h d t p?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "It isn't that. It isn't that, Spirit. He has the power to render us happy or unhappy; to make our service light or burdensome; a pleasure or a toil. Say that his power lies in words and looks; in things so slight and insignificant that it is impossible to add and count 'em up: what then? The happiness he gives is quite as great as if it cost a fortune.",
+        "abbrev": false,
+        "encoded": "I i t. I i t, S. H h t p t r u h o u; t m o s l o b; a p o a t. S t h p l i w a l; i t s s a i t i i i t a a c 'em u: w t? T h h g i q a g a i i c a f."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "What is the matter?",
+        "abbrev": false,
+        "encoded": "W i t m?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Nothing in particular.",
+        "abbrev": false,
+        "encoded": "N i p."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "Something, I think?",
+        "abbrev": false,
+        "encoded": "S, I t?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "No, no. I should like to be able to say a word or two to my clerk just now. That's all.",
+        "abbrev": false,
+        "encoded": "N, n. I s l t b a t s a w o t t m c j n. T a."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "My time grows short. Quick!",
+        "abbrev": false,
+        "encoded": "M t g s. Q!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Oh... I know this place. Oh, Spirit, why?",
+        "abbrev": false,
+        "encoded": "O. I k t p. O, S, w?"
+    },
+    {
+        "character": "BELLE",
+        "lines": "It matters little. To you, very little. Another idol has displaced me; and if it can cheer and comfort you in time to come, as I would have tried to do, I have no just cause to grieve.",
+        "abbrev": false,
+        "encoded": "I m l. T y, v l. A i h d m; a i i c c a c y i t t c, a I w h t t d, I h n j c t g."
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "What Idol has displaced you?",
+        "abbrev": false,
+        "encoded": "W I h d y?"
+    },
+    {
+        "character": "BELLE",
+        "lines": "A golden one.",
+        "abbrev": false,
+        "encoded": "A g o."
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "Oh, proper double-standard! There is nothing on which the world is so hard as poverty; and there is nothing it professes to condemn with such severity as the pursuit of wealth!",
+        "abbrev": false,
+        "encoded": "O, p d s! T i n o w t w i s h a p; a t i n i p t c w s s a t p o w!"
+    },
+    {
+        "character": "BELLE",
+        "lines": "You fear the world too much. All your other hopes have merged into the hope of being beyond the chance of its sordid reproach. I have seen your nobler aspirations fall off one by one until the master passion, Gain, engrosses you. Have I not?",
+        "abbrev": false,
+        "encoded": "Y f t w t m. A y o h h m i t h o b b t c o i s r. I h s y n a f o o b o u t m p, G, e y. H I n?"
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "What then? Even if I have grown so much wiser, what then? I am not changed towards you.",
+        "abbrev": false,
+        "encoded": "W t? E i I h g s m w, w t? I a n c t y."
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "Am I?",
+        "abbrev": false,
+        "encoded": "A I?"
+    },
+    {
+        "character": "BELLE",
+        "lines": "Our contract is an old one. It was made when we were both poor, and content to be so, until, in good season, we could improve our worldly fortune by our patient industry. You are changed. When it was made, you were another man.",
+        "abbrev": false,
+        "encoded": "O c i a o o. I w m w w w b p, a c t b s, u, i g s, w c i o w f b o p i. Y a c. W i w m, y w a m."
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "I was a boy.",
+        "abbrev": false,
+        "encoded": "I w a b."
+    },
+    {
+        "character": "BELLE",
+        "lines": "Your own feeling tells you that you were not what you are. I am. How often and how keenly I have thought of this, I will not say. It is enough that I have thought of it, and can release you.",
+        "abbrev": false,
+        "encoded": "Y o f t y t y w n w y a. I a. H o a h k I h t o t, I w n s. I i e t I h t o i, a c r y."
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "Have I ever sought release?",
+        "abbrev": false,
+        "encoded": "H I e s r?"
+    },
+    {
+        "character": "BELLE",
+        "lines": "In words. No. Never.",
+        "abbrev": false,
+        "encoded": "I w. N. N."
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "In what, then?",
+        "abbrev": false,
+        "encoded": "I w, t?"
+    },
+    {
+        "character": "BELLE",
+        "lines": "In a changed nature; an altered spirit; in everything that made my love of any worth or value in your sight. If this had never been between us, tell me, would you seek me, a poor, dowerless girl out and try to win me now?",
+        "abbrev": false,
+        "encoded": "I a c n; a a s; i e t m m l o a w o v i y s. I t h n b b u, t m, w y s m, a p, d g o a t t w m n?"
+    },
+    {
+        "character": "BELLE",
+        "lines": "As I thought. I release you. With a full heart, for the love of him you once were.",
+        "abbrev": false,
+        "encoded": "A I t. I r y. W a f h, f t l o h y o w."
+    },
+    {
+        "character": "YOUNG SCROOGE",
+        "lines": "Belle-",
+        "abbrev": false,
+        "encoded": "B"
+    },
+    {
+        "character": "BELLE",
+        "lines": "You may have pain in this. Pain for a very, very brief time, and you will dismiss the recollection of it, gladly, as an unprofitable dream, from which it happened well that you awoke. May you be happy in the life you have chosen!",
+        "abbrev": false,
+        "encoded": "Y m h p i t. P f a v, v b t, a y w d t r o i, g, a a u d, f w i h w t y a. M y b h i t l y h c!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Spirit! Show me no more! Conduct me home. Why do you delight to torture me?",
+        "abbrev": false,
+        "encoded": "S! S m n m! C m h. W d y d t t m?"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "One shadow more!",
+        "abbrev": false,
+        "encoded": "O s m!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "No more! No more! I don't wish to see it. Show me no more!",
+        "abbrev": false,
+        "encoded": "N m! N m! I d w t s i. S m n m!"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PAST",
+        "lines": "I told you these were the shadows of the things that have been. That they are what they are, do not blame me!",
+        "abbrev": false,
+        "encoded": "I t y t w t s o t t t h b. T t a w t a, d n b m!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Leave me! Take me back. Haunt me no longer!",
+        "abbrev": false,
+        "encoded": "L m! T m b. H m n l!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "",
+        "abbrev": false,
+        "encoded": ""
+    },
+    {
+        "character": "NARRATOR",
+        "lines": "Scrooge felt that he was restored to consciousness in the right nick of time, for the especial purpose of holding a conference with the second messenger despatched to him through Jacob Marley's intervention. He established a sharp look-out all round the bed. For he wished to challenge the Spirit on the moment of its appearance, and did not wish to be taken by surprise and made nervous. Indeed, Scrooge believed he was ready for a good broad field of strange appearances, and that nothing between a baby and a rhinoceros would have astonished very much.",
+        "abbrev": false,
+        "encoded": "S f t h w r t c i t r n o t, f t e p o h a c w t s m d t h t J M i. H e a s l o a r t b. F h w t c t S o t m o i a, a d n w t b t b s a m n. I, S b h w r f a g b f o s a, a t n b a b a a r w h a v m."
+    },
+    {
+        "character": "NARRATOR",
+        "lines": "",
+        "abbrev": false,
+        "encoded": ""
+    },
+    {
+        "character": "NARRATOR",
+        "lines": "",
+        "abbrev": false,
+        "encoded": ""
+    },
+    {
+        "character": "NARRATOR",
+        "lines": "Now, being prepared for almost anything, he was not by any means prepared for nothing; and consequently, when the bell struck Two, and no shape appeared, he was taken with a violent fit of trembling. All this time he sat up in his bed, until he became aware of a small blaze of ruddy light, which streamed into the room.",
+        "abbrev": false,
+        "encoded": "N, b p f a a, h w n b a m p f n; a c, w t b s T, a n s a, h w t w a v f o t. A t t h s u i h b, u h b a o a s b o r l, w s i t r."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "Ebenezer Scrooge.",
+        "abbrev": false,
+        "encoded": "E S."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "Ebenezer Scrooge! Come in! Come in and know me better, man!",
+        "abbrev": false,
+        "encoded": "E S! C i! C i a k m b, m!"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "I am the Ghost of Christmas Present. Look upon me! (Laughing) You have never seen the like of me before!",
+        "abbrev": false,
+        "encoded": "I a t G o C P. L u m! (Laughing) Y h n s t l o m b!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "(Somewhat delighted) Never.",
+        "abbrev": false,
+        "encoded": "(Somewhat delighted) N."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "Have you never walked forth with the younger members of my family?",
+        "abbrev": false,
+        "encoded": "H y n w f w t y m o m f?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "I am afraid I have not. Have you had many brothers, Spirit?",
+        "abbrev": false,
+        "encoded": "I a a I h n. H y h m b, S?"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "(Laughing) More than eighteen hundred.",
+        "abbrev": false,
+        "encoded": "(Laughing) M t e h."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "A tremendous family to provide for.",
+        "abbrev": false,
+        "encoded": "A t f t p f."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Spirit, conduct me where you will. I went forth on compulsion and I learned a lesson which is working now. Tonight if you have aught to teach me, let me profit by it.",
+        "abbrev": false,
+        "encoded": "S, c m w y w. I w f o c a I l a l w i w n. T i y h a t t m, l m p b i."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "Touch my robe!",
+        "abbrev": false,
+        "encoded": "T m r!"
+    },
+    {
+        "character": "NARRATOR",
+        "lines": "All vanished around them. So did the room, the fire, the ruddy glow, the hour of night, until they stood in the city streets on Christmas morning, where the people made a rough, but brisk and not unpleasant kind of music. The poulterers' shops were still half open, and the fruiterers' were radiant in their glory. And at the same time there emerged, from scores of by-streets, lanes, and nameless turnings, innumerable people, carrying their dinners to the bakers' shops. The sight of these poor revelers appeared to interest the Spirit very much, and once or twice, when there were angry words between some dinner-carriers who had jostled each other, he waved his torch over them, and their good-humor was restored directly. For they said, it was a shame to quarrel upon Christmas Day. And so it was!",
+        "abbrev": false,
+        "encoded": "A v a t. S d t r, t f, t r g, t h o n, u t s i t c s o C m, w t p m a r, b b a n u k o m. T p s w s h o, a t f w r i t g. A a t s t t e, f s o b s, l, a n t, i p, c t d t t b s. T s o t p r a t i t S v m, a o o t, w t w a w b s d c w h j e o, h w h t o t, a t g h w r d. F t s, i w a s t q u C D. A s i w!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Is there a peculiar flavor in what you sprinkle from your torch?",
+        "abbrev": false,
+        "encoded": "I t a p f i w y s f y t?"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "There is. My own. (He laughs)",
+        "abbrev": false,
+        "encoded": "T i. M o. (He laughs)"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Would it apply to any kind of dinner on this day?",
+        "abbrev": false,
+        "encoded": "W i a t a k o d o t d?"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "To any kindly given. To a poor one most.",
+        "abbrev": false,
+        "encoded": "T a k g. T a p o m."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Why to a poor one most?",
+        "abbrev": false,
+        "encoded": "W t a p o m?"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "Because it needs it most.",
+        "abbrev": false,
+        "encoded": "B i n i m."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Spirit! I wonder you, of all the beings in the many worlds about us, should desire to cramp these people's opportunities of innocent enjoyment.",
+        "abbrev": false,
+        "encoded": "S! I w y, o a t b i t m w a u, s d t c t p o o i e."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "I?",
+        "abbrev": false,
+        "encoded": "I?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "You would deprive them of their means of dining every seventh day, often the only day on which they can be said to dine at all, wouldn't you?",
+        "abbrev": false,
+        "encoded": "Y w d t o t m o d e s d, o t o d o w t c b s t d a a, w y?"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "I!",
+        "abbrev": false,
+        "encoded": "I!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "You seek to close these places on the Seventh day. And it comes to the same thing.",
+        "abbrev": false,
+        "encoded": "Y s t c t p o t S d. A i c t t s t."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "I seek?!",
+        "abbrev": false,
+        "encoded": "I s!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Forgive me if I am wrong. It has been done in your name, or at least in that of your family.",
+        "abbrev": false,
+        "encoded": "F m i I a w. I h b d i y n, o a l i t o y f."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "There are some upon this earth of yours who lay claim to know us, and who do their deeds of passion, pride, ill-will, hatred, envy, bigotry, and selfishness in our name, who are as strange to us, and all our kith and kin, as if they had never lived. Remember that, and charge their doings on themselves, not us.",
+        "abbrev": false,
+        "encoded": "T a s u t e o y w l c t k u, a w d t d o p, p, i w, h, e, b, a s i o n, w a a s t u, a a o k a k, a i t h n l. R t, a c t d o t, n u."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Spirit, I will.",
+        "abbrev": false,
+        "encoded": "S, I w."
+    },
+    {
+        "character": "MRS. CRATCHIT",
+        "lines": "What has ever got your precious father, then? And your brother, Tiny Tim? And Martha warn't as late last Christmas Day by half an hour!",
+        "abbrev": false,
+        "encoded": "W h e g y p f, t? A y b, T T? A M w a l l C D b h a h!"
+    },
+    {
+        "character": "BELINDA",
+        "lines": "Here's Martha, mother!",
+        "abbrev": false,
+        "encoded": "H M, m!"
+    },
+    {
+        "character": "PETER",
+        "lines": "Here's Martha, mother! Hurrah! There's such a goose, Martha.",
+        "abbrev": false,
+        "encoded": "H M, m! H! T s a g, M."
+    },
+    {
+        "character": "MRS. CRATCHIT",
+        "lines": "Why, bless your heart alive, my dear, how late you are!",
+        "abbrev": false,
+        "encoded": "W, b y h a, m d, h l y a!"
+    },
+    {
+        "character": "MARTHA",
+        "lines": "We'd a deal of work to finish up last night and had to clear away this morning, mother!",
+        "abbrev": false,
+        "encoded": "W a d o w t f u l n a h t c a t m, m!"
+    },
+    {
+        "character": "MRS. CRATCHIT",
+        "lines": "Well! Never mind so long as you are come. Sit ye down before the fire, my dear, and have a warm.",
+        "abbrev": false,
+        "encoded": "W! N m s l a y a c. S y d b t f, m d, a h a w."
+    },
+    {
+        "character": "PETER",
+        "lines": "No, no! There's father coming.",
+        "abbrev": false,
+        "encoded": "N, n! T f c."
+    },
+    {
+        "character": "BELINDA",
+        "lines": "Hide, Martha, hide!",
+        "abbrev": false,
+        "encoded": "H, M, h!"
+    },
+    {
+        "character": "PETER AND BELINDA",
+        "lines": "Father!",
+        "abbrev": false,
+        "encoded": "F!"
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "Hello, my lovelies! Hello, dear. (He kisses Mrs. Cratchit on the forehead) Why, where's our Martha?",
+        "abbrev": false,
+        "encoded": "H, m l! H, d. (He kisses Mrs. Cratchit on the forehead) W, w o M?"
+    },
+    {
+        "character": "MRS. CRATCHIT",
+        "lines": "Not coming.",
+        "abbrev": false,
+        "encoded": "N c."
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "Not coming! Not coming upon Christmas Day!",
+        "abbrev": false,
+        "encoded": "N c! N c u C D!"
+    },
+    {
+        "character": "MRS. CRATCHIT",
+        "lines": "And how did little Tim behave?",
+        "abbrev": false,
+        "encoded": "A h d l T b?"
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "As good as gold, and better. Somehow, he gets thoughtful, sitting by himself so much, and thinks the strangest things you ever heard. He told me, coming home, that he hoped the people saw him in the church, because he was a cripple, and it might be pleasant to them to remember upon Christmas Day who made lame beggars walk and blind men see. (Beat - Bob struggles to not weep) I do believe... I do believe our Tim is growing stronger and healthier by the day.",
+        "abbrev": false,
+        "encoded": "A g a g, a b. S, h g t, s b h s m, a t t s t y e h. H t m, c h, t h h t p s h i t c, b h w a c, a i m b p t t t r u C D w m l b w a b m s. (Beat - Bob struggles to not weep) I d b. I d b o T i g s a h b t d."
+    },
+    {
+        "character": "BELINDA",
+        "lines": "Oh father! You must see the pudding! Can't you smell it already?",
+        "abbrev": false,
+        "encoded": "O f! Y m s t p! C y s i a?"
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "Oh, it smells wonderful, my dear! And look at this feast before us - why, I don't believe there ever was a goose so finely-roasted as this! Let's waste no more time!",
+        "abbrev": false,
+        "encoded": "O, i s w, m d! A l a t f b u w, I d b t e w a g s f r a t! L w n m t!"
+    },
+    {
+        "character": "MRS. CRATCHIT",
+        "lines": "I only hope the pudding turns out. Oh, I hope I had the right amount of flour. Or it that it is not over-baked, or under-proved, or has a soggy bottom.",
+        "abbrev": false,
+        "encoded": "I o h t p t o. O, I h I h t r a o f. O i t i i n o b, o u p, o h a s b."
+    },
+    {
+        "character": "PETER",
+        "lines": "I'm sure it will be wonderful, mother! Right, Tim?",
+        "abbrev": false,
+        "encoded": "I s i w b w, m! R, T?"
+    },
+    {
+        "character": "MRS. CRATCHIT",
+        "lines": "Aw, thank you, my darlings.",
+        "abbrev": false,
+        "encoded": "A, t y, m d."
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "I'm so very blessed to have such a wonderful family. A merry Christmas to us all, my dears, God bless us!",
+        "abbrev": false,
+        "encoded": "I s v b t h s a w f. A m C t u a, m d, G b u!"
+    },
+    {
+        "character": "THE FAMILY",
+        "lines": "God bless us!",
+        "abbrev": false,
+        "encoded": "G b u!"
+    },
+    {
+        "character": "TINY TIM",
+        "lines": "God bless us every one!",
+        "abbrev": false,
+        "encoded": "G b u e o!"
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "Oh! I quite forgot to make a toast. (Raising a glass) Mr. Scrooge! I'll give you Mr. Scrooge, the Founder of the Feast!",
+        "abbrev": false,
+        "encoded": "O! I q f t m a t. (Raising a glass) M. S! I g y M. S, t F o t F!"
+    },
+    {
+        "character": "MRS. CRATCHIT",
+        "lines": "The Founder of the Feast, indeed! I wish I had him here. I'd give him a piece of my mind to feast upon, and I hope he'd have a good appetite for it.",
+        "abbrev": false,
+        "encoded": "T F o t F, i! I w I h h h. I g h a p o m m t f u, a I h h h a g a f i."
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "My dear, the children - Christmas Day.",
+        "abbrev": false,
+        "encoded": "M d, t c C D."
+    },
+    {
+        "character": "MRS. CRATCHIT",
+        "lines": "It should be Christmas Day, I am sure, on which one drinks the health of such an odious, stingy, hard, unfeeling man as Mr. Scrooge. You know he is, Robert! Nobody knows it better than you do, poor fellow!",
+        "abbrev": false,
+        "encoded": "I s b C D, I a s, o w o d t h o s a o, s, h, u m a M. S. Y k h i, R! N k i b t y d, p f!"
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "My dear! Christmas Day.",
+        "abbrev": false,
+        "encoded": "M d! C D."
+    },
+    {
+        "character": "MRS. CRATCHIT",
+        "lines": "I'll drink his health for your sake and the Day's - not for his. Long life to him! A merry Christmas and a happy New Year! He'll be very merry and very happy, I have not doubt!",
+        "abbrev": false,
+        "encoded": "I d h h f y s a t D n f h. L l t h! A m C a a h N Y! H b v m a v h, I h n d!"
+    },
+    {
+        "character": "TINY TIM",
+        "lines": "To Mr. Scrooge!",
+        "abbrev": false,
+        "encoded": "T M. S!"
+    },
+    {
+        "character": "EVERYONE",
+        "lines": "To Mr. Scrooge!",
+        "abbrev": false,
+        "encoded": "T M. S!"
+    },
+    {
+        "character": "MRS. CRATCHIT",
+        "lines": "I had better go check on the pudding.",
+        "abbrev": false,
+        "encoded": "I h b g c o t p."
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "Oh, Peter - I saw a posting for a clerk position on my way home today; a position that pays a full five-and-sixpence weekly! Could be a fine opportunity to make yourself into an upstanding businessman, I dare say.",
+        "abbrev": false,
+        "encoded": "O, P I s a p f a c p o m w h t; a p t p a f f a s w! C b a f o t m y i a u b, I d s."
+    },
+    {
+        "character": "BELINDA",
+        "lines": "Can you imagine, Martha - Peter, a businessman?",
+        "abbrev": false,
+        "encoded": "C y i, M P, a b?"
+    },
+    {
+        "character": "MARTHA",
+        "lines": "I didn't realize there was a business for balderdash and scuttlebutt! I've no doubt you'll excel at that, Peter!",
+        "abbrev": false,
+        "encoded": "I d r t w a b f b a s! I n d y e a t, P!"
+    },
+    {
+        "character": "MRS. CRATCHIT",
+        "lines": "Alright, my lovelies - here's the pudding, for what it's worth. Tim, would you like the honor?",
+        "abbrev": false,
+        "encoded": "A, m l h t p, f w i w. T, w y l t h?"
+    },
+    {
+        "character": "MRS. CRATCHIT",
+        "lines": "Well, don't be shy... do you like it?",
+        "abbrev": false,
+        "encoded": "W, d b s. d y l i?"
+    },
+    {
+        "character": "TINY TIM",
+        "lines": "I don't like it, mother. (Everyone gasps. Mrs. Cratchit looks defeated). I love it.",
+        "abbrev": false,
+        "encoded": "I d l i, m. (Everyone gasps. Mrs. Cratchit looks defeated) . I l i."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Spirit, tell me if Tiny Tim will live.",
+        "abbrev": false,
+        "encoded": "S, t m i T T w l."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "I see a vacant seat in the poor chimney corner, and a crutch without an owner, carefully preserved. If these shadows remain unaltered by the Future, the child will die.",
+        "abbrev": false,
+        "encoded": "I s a v s i t p c c, a a c w a o, c p. I t s r u b t F, t c w d."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "No, no. Oh no, kind Spirit! say he will be spared.",
+        "abbrev": false,
+        "encoded": "N, n. O n, k S! s h w b s."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "If these shadows remain unaltered by the Future none other of my race will find him here. What then? If he be like to die, he had better do it, and decrease the surplus population.",
+        "abbrev": false,
+        "encoded": "I t s r u b t F n o o m r w f h h. W t? I h b l t d, h h b d i, a d t s p."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "Man, if man you be in heart, not adamant, forbear that wicked cant until you have discovered what the surplus is, and where it is. Will you decide what men shall live, what men shall die? It may be that, in the sight of Heaven, you are more worthless and less fit to live than millions like this poor man's child. Oh, to hear the insect on the leaf pronouncing on the too much life among his hungry brothers in the dust! Come.",
+        "abbrev": false,
+        "encoded": "M, i m y b i h, n a, f t w c u y h d w t s i, a w i i. W y d w m s l, w m s d? I m b t, i t s o H, y a m w a l f t l t m l t p m c. O, t h t i o t l p o t t m l a h h b i t d! C."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "",
+        "abbrev": false,
+        "encoded": ""
+    },
+    {
+        "character": "NARRATOR",
+        "lines": "By this time it was getting dark, and snowing pretty heavily; and as Scrooge and the Spirit went along the streets, the brightness of the roaring fires in kitchens, parlors, and all sorts of rooms was wonderful. Scrooge's mind swirled as he walked, and gazed at the warm, cheerful interiors solemnly. At last they came to a fine terraced house, which was altogether familiar and unfamiliar to him.",
+        "abbrev": false,
+        "encoded": "B t t i w g d, a s p h; a a S a t S w a t s, t b o t r f i k, p, a a s o r w w. S m s a h w, a g a t w, c i s. A l t c t a f t h, w w a f a u t h."
+    },
+    {
+        "character": "FRED",
+        "lines": "Ha, ha! Ha, ha, ha!",
+        "abbrev": false,
+        "encoded": "H, h! H, h, h!"
+    },
+    {
+        "character": "ALL",
+        "lines": "Ha, ha, ha, ha!",
+        "abbrev": false,
+        "encoded": "H, h, h, h!"
+    },
+    {
+        "character": "FRED",
+        "lines": "He said that Christmas was a humbug, as I live! He believed it too!",
+        "abbrev": false,
+        "encoded": "H s t C w a h, a I l! H b i t!"
+    },
+    {
+        "character": "FRED'S WIFE",
+        "lines": "More shame for him, Fred!",
+        "abbrev": false,
+        "encoded": "M s f h, F!"
+    },
+    {
+        "character": "FRED",
+        "lines": "He's a comical old fellow, that's the truth; and not so pleasant as he might be. However, his offenses carry their own punishment, and I have nothing to say against him.",
+        "abbrev": false,
+        "encoded": "H a c o f, t t t; a n s p a h m b. H, h o c t o p, a I h n t s a h."
+    },
+    {
+        "character": "FRED'S WIFE",
+        "lines": "I'm sure he is very rich, Fred. At least, you always tell me so.",
+        "abbrev": false,
+        "encoded": "I s h i v r, F. A l, y a t m s."
+    },
+    {
+        "character": "FRED",
+        "lines": "What of that, my dear? His wealth is of no use to him. He don't do any good with it. He don't make himself comfortable with it. He hasn't the satisfaction of thinking--ha, ha, ha!--that he is ever going to benefit us with it.",
+        "abbrev": false,
+        "encoded": "W o t, m d? H w i o n u t h. H d d a g w i. H d m h c w i. H h t s o t h, h, h! t h i e g t b u w i."
+    },
+    {
+        "character": "FRED'S WIFE",
+        "lines": "I have no patience with him.",
+        "abbrev": false,
+        "encoded": "I h n p w h."
+    },
+    {
+        "character": "FRED",
+        "lines": "Well! I am very glad to hear it because I haven't any great faith in these young housekeepers. What do you say, Charlotte?",
+        "abbrev": false,
+        "encoded": "W! I a v g t h i b I h a g f i t y h. W d y s, C?"
+    },
+    {
+        "character": "CHARLOTTE",
+        "lines": "As a single lady in want of companionship, I am a wretched outcast who has no right to express an opinion on the subject.",
+        "abbrev": false,
+        "encoded": "A a s l i w o c, I a a w o w h n r t e a o o t s."
+    },
+    {
+        "character": "FRED'S WIFE",
+        "lines": "Do go on, Fred. He never finishes what he begins to say! He is such a ridiculous fellow!",
+        "abbrev": false,
+        "encoded": "D g o, F. H n f w h b t s! H i s a r f!"
+    },
+    {
+        "character": "FRED",
+        "lines": "(Laughing) I was only going to say that the consequence of his taking a dislike to us, and not making merry with us, is, as I think, that he loses some pleasant moments, which could do him no harm. I am sure he loses pleasanter companions than he can find in his own thoughts, either in his moldy old office or his dusty chambers. I mean to give him the same chance every year, whether he likes it or not, for I pity him. He may rail at Christmas till he dies, but he can't help thinking better of it--I defy him--if he finds me going there, in good temper, year after year, and saying, 'Uncle Scrooge, how are you?' If it only put him in the vein to leave his poor clerk fifty pounds, that's something; and I think I shook him yesterday.",
+        "abbrev": false,
+        "encoded": "(Laughing) I w o g t s t t c o h t a d t u, a n m m w u, i, a I t, t h l s p m, w c d h n h. I a s h l p c t h c f i h o t, e i h m o o o h d c. I m t g h t s c e y, w h l i o n, f I p h. H m r a C t h d, b h c h t b o i I d h i h f m g t, i g t, y a y, a s, 'Uncle S, h a y I i o p h i t v t l h p c f p, t s; a I t I s h y."
+    },
+    {
+        "character": "FRED'S WIFE",
+        "lines": "Let's not tarry on that subject any longer - how about we play a game?",
+        "abbrev": false,
+        "encoded": "L n t o t s a l h a w p a g?"
+    },
+    {
+        "character": "LUCY",
+        "lines": "Oh yes! A game! How about Blind Man's Bluff?",
+        "abbrev": false,
+        "encoded": "O y! A g! H a B M B?"
+    },
+    {
+        "character": "CHARLOTTE",
+        "lines": "Oh, oh - Pass the Slipper!",
+        "abbrev": false,
+        "encoded": "O, o P t S!"
+    },
+    {
+        "character": "LUCY",
+        "lines": "What about Yes or No?",
+        "abbrev": false,
+        "encoded": "W a Y o N?"
+    },
+    {
+        "character": "FRED'S WIFE",
+        "lines": "Ah! Yes or No!",
+        "abbrev": false,
+        "encoded": "A! Y o N!"
+    },
+    {
+        "character": "FRED",
+        "lines": "I quite like a bit of Yes or No! I'll go first.",
+        "abbrev": false,
+        "encoded": "I q l a b o Y o N! I g f."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "Time grows short; let us away.",
+        "abbrev": false,
+        "encoded": "T g s; l u a."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Let me stay until the guests have departed.",
+        "abbrev": false,
+        "encoded": "L m s u t g h d."
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "This cannot be done.",
+        "abbrev": false,
+        "encoded": "T c b d."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Here is a new game. One half-hour, Spirit, only one!",
+        "abbrev": false,
+        "encoded": "H i a n g. O h h, S, o o!"
+    },
+    {
+        "character": "FRED'S WIFE",
+        "lines": "How does one play Yes or No?",
+        "abbrev": false,
+        "encoded": "H d o p Y o N?"
+    },
+    {
+        "character": "FRED",
+        "lines": "It's simple, I think of something and you try to guess it by asking yes or no questions.",
+        "abbrev": false,
+        "encoded": "I s, I t o s a y t t g i b a y o n q."
+    },
+    {
+        "character": "LUCY",
+        "lines": "Is it an animal, vegetable or mineral?",
+        "abbrev": false,
+        "encoded": "I i a a, v o m?"
+    },
+    {
+        "character": "FRED",
+        "lines": "Yes.",
+        "abbrev": false,
+        "encoded": "Y."
+    },
+    {
+        "character": "LUCY",
+        "lines": "Is it a vegetable?",
+        "abbrev": false,
+        "encoded": "I i a v?"
+    },
+    {
+        "character": "FRED",
+        "lines": "No.",
+        "abbrev": false,
+        "encoded": "N."
+    },
+    {
+        "character": "CHARLOTTE",
+        "lines": "A mineral?",
+        "abbrev": false,
+        "encoded": "A m?"
+    },
+    {
+        "character": "FRED",
+        "lines": "No.",
+        "abbrev": false,
+        "encoded": "N."
+    },
+    {
+        "character": "FRED'S WIFE",
+        "lines": "An animal?",
+        "abbrev": false,
+        "encoded": "A a?"
+    },
+    {
+        "character": "FRED",
+        "lines": "Naturally.",
+        "abbrev": false,
+        "encoded": "N."
+    },
+    {
+        "character": "LUCY",
+        "lines": "Is it a live animal?",
+        "abbrev": false,
+        "encoded": "I i a l a?"
+    },
+    {
+        "character": "FRED",
+        "lines": "Yes.",
+        "abbrev": false,
+        "encoded": "Y."
+    },
+    {
+        "character": "CHARLOTTE",
+        "lines": "Is it a savage animal?",
+        "abbrev": false,
+        "encoded": "I i a s a?"
+    },
+    {
+        "character": "FRED",
+        "lines": "Very.",
+        "abbrev": false,
+        "encoded": "V."
+    },
+    {
+        "character": "FRED'S WIFE",
+        "lines": "A tiger!",
+        "abbrev": false,
+        "encoded": "A t!"
+    },
+    {
+        "character": "FRED",
+        "lines": "No.",
+        "abbrev": false,
+        "encoded": "N."
+    },
+    {
+        "character": "LUCY",
+        "lines": "Does it growl?",
+        "abbrev": false,
+        "encoded": "D i g?"
+    },
+    {
+        "character": "FRED",
+        "lines": "Yes.",
+        "abbrev": false,
+        "encoded": "Y."
+    },
+    {
+        "character": "CHARLOTTE",
+        "lines": "Does it grunt?",
+        "abbrev": false,
+        "encoded": "D i g?"
+    },
+    {
+        "character": "FRED",
+        "lines": "Yes.",
+        "abbrev": false,
+        "encoded": "Y."
+    },
+    {
+        "character": "FRED'S WIFE",
+        "lines": "An animal that growls and grunts?",
+        "abbrev": false,
+        "encoded": "A a t g a g?"
+    },
+    {
+        "character": "FRED",
+        "lines": "Yes.",
+        "abbrev": false,
+        "encoded": "Y."
+    },
+    {
+        "character": "LUCY",
+        "lines": "A Tatzelwurm?!",
+        "abbrev": false,
+        "encoded": "A T!"
+    },
+    {
+        "character": "FRED",
+        "lines": "Uh... No.",
+        "abbrev": false,
+        "encoded": "U. N."
+    },
+    {
+        "character": "CHARLOTTE",
+        "lines": "A cow?",
+        "abbrev": false,
+        "encoded": "A c?"
+    },
+    {
+        "character": "FRED",
+        "lines": "No.",
+        "abbrev": false,
+        "encoded": "N."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "A dog?",
+        "abbrev": false,
+        "encoded": "A d?"
+    },
+    {
+        "character": "FRED'S WIFE",
+        "lines": "A dog?",
+        "abbrev": false,
+        "encoded": "A d?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "I guessed it first.",
+        "abbrev": false,
+        "encoded": "I g i f."
+    },
+    {
+        "character": "FRED",
+        "lines": "No.",
+        "abbrev": false,
+        "encoded": "N."
+    },
+    {
+        "character": "CHARLOTTE",
+        "lines": "Does it live in the city?",
+        "abbrev": false,
+        "encoded": "D i l i t c?"
+    },
+    {
+        "character": "FRED",
+        "lines": "Yes.",
+        "abbrev": false,
+        "encoded": "Y."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Members of Parliament!",
+        "abbrev": false,
+        "encoded": "M o P!"
+    },
+    {
+        "character": "FRED'S WIFE",
+        "lines": "Do you kill it in the market?",
+        "abbrev": false,
+        "encoded": "D y k i i t m?"
+    },
+    {
+        "character": "FRED",
+        "lines": "No.",
+        "abbrev": false,
+        "encoded": "N."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Oh, not Parliament, then.",
+        "abbrev": false,
+        "encoded": "O, n P, t."
+    },
+    {
+        "character": "CHARLOTTE",
+        "lines": "I have found it out! I know what it is, Fred. I know what it is!",
+        "abbrev": false,
+        "encoded": "I h f i o! I k w i i, F. I k w i i!"
+    },
+    {
+        "character": "FRED",
+        "lines": "What is it?",
+        "abbrev": false,
+        "encoded": "W i i?"
+    },
+    {
+        "character": "CHARLOTTE",
+        "lines": "It's your uncle Scro-o-o-o-oge.",
+        "abbrev": false,
+        "encoded": "I y u S o o o o."
+    },
+    {
+        "character": "FRED",
+        "lines": "He has given us plenty of merriment, I am sure, and it would be ungrateful not to drink his health. Here is a glass of mulled wine ready to our hand at the moment; and I say, 'Uncle Scrooge!'",
+        "abbrev": false,
+        "encoded": "H h g u p o m, I a s, a i w b u n t d h h. H i a g o m w r t o h a t m; a I s, 'Uncle S"
+    },
+    {
+        "character": "EVERYONE",
+        "lines": "Well! Uncle Scrooge!",
+        "abbrev": false,
+        "encoded": "W! U S!"
+    },
+    {
+        "character": "FRED",
+        "lines": "A Merry Christmas and a happy New Year to the old man, whatever he is! He wouldn't take it from me, but may he have it, nevertheless. Uncle Scrooge!",
+        "abbrev": false,
+        "encoded": "A M C a a h N Y t t o m, w h i! H w t i f m, b m h h i, n. U S!"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "Come. My time grows short.",
+        "abbrev": false,
+        "encoded": "C. M t g s."
+    },
+    {
+        "character": "NARRATOR",
+        "lines": "The whole scene passed off in the breath of the last word spoken by his nephew; and he and the Spirit were again upon their travels. It was strange, too, that, while Scrooge remained unaltered in his outward form, the Spirit grew older, clearly older. Scrooge had observed this change, but never spoke of it until now, when, looking at the Spirit as they stood together in an open place, he noticed that its hair was grey.",
+        "abbrev": false,
+        "encoded": "T w s p o i t b o t l w s b h n; a h a t S w a u t t. I w s, t, t, w S r u i h o f, t S g o, c o. S h o t c, b n s o i u n, w, l a t S a t s t i a o p, h n t i h w g."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Are spirts' lives so short?",
+        "abbrev": false,
+        "encoded": "A s l s s?"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "(Chuckles) My life upon this globe is very brief. It ends tonight.",
+        "abbrev": false,
+        "encoded": "(Chuckles) M l u t g i v b. I e t."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Tonight!",
+        "abbrev": false,
+        "encoded": "T!"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "Tonight at midnight. Hark! The time is drawing near.",
+        "abbrev": false,
+        "encoded": "T a m. H! T t i d n."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Forgive me if I am not justified in what I ask, but I see something strange, and not belonging to yourself, protruding from your skirts. Is it a foot or a claw?",
+        "abbrev": false,
+        "encoded": "F m i I a n j i w I a, b I s s s, a n b t y, p f y s. I i a f o a c?"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "It might be a claw, for the flesh there is upon it. Look here!",
+        "abbrev": false,
+        "encoded": "I m b a c, f t f t i u i. L h!"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "Oh, Man! Look here. Look, look down here!",
+        "abbrev": false,
+        "encoded": "O, M! L h. L, l d h!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Spirit! Are they yours?",
+        "abbrev": false,
+        "encoded": "S! A t y?"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "They are Man's. And they cling to me appealing, from their fathers. This boy is Ignorance. This girl is Want. Beware of them both, and all of their degree, but most of all beware this boy, for on his brow I see that written which is Doom, unless the writing be erased. Deny it! Slander those who tell it ye! Admit it for your factious purposes, and make it worse! And bide the end!",
+        "abbrev": false,
+        "encoded": "T a M. A t c t m a, f t f. T b i I. T g i W. B o t b, a a o t d, b m o a b t b, f o h b I s t w w i D, u t w b e. D i! S t w t i y! A i f y f p, a m i w! A b t e!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Have they no refuge or resource?",
+        "abbrev": false,
+        "encoded": "H t n r o r?"
+    },
+    {
+        "character": "GHOST OF CHRISTMAS PRESENT",
+        "lines": "Are there no prisons? Are there no workhouses?",
+        "abbrev": false,
+        "encoded": "A t n p? A t n w?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Spirit, I'm sorry. I did not know. I did not know!",
+        "abbrev": false,
+        "encoded": "S, I s. I d n k. I d n k!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "I am in the presence of the Ghost of Christmas Yet to Come?",
+        "abbrev": false,
+        "encoded": "I a i t p o t G o C Y t C?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "You are about to show me shadows of the things that have not happened, but will happen in the time before us. Is that so, Spirit?",
+        "abbrev": false,
+        "encoded": "Y a a t s m s o t t t h n h, b w h i t t b u. I t s, S?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Ghost of the Future! I fear you more than any specter I have seen. But as I know your purpose is to do me good, and as I hope to live to be another man from what I was, I am prepared to bear your company, and do it with a thankful heart. Will you not speak to me?",
+        "abbrev": false,
+        "encoded": "G o t F! I f y m t a s I h s. B a I k y p i t d m g, a a I h t l t b a m f w I w, I a p t b y c, a d i w a t h. W y n s t m?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Lead on! Lead on! The night is waning fast, and it is precious time to me, I know. Lead on, Spirit!",
+        "abbrev": false,
+        "encoded": "L o! L o! T n i w f, a i i p t t m, I k. L o, S!"
+    },
+    {
+        "character": "BUSINESS PERSON #1",
+        "lines": "No, I don't know much about it either way. I only know he's dead.",
+        "abbrev": false,
+        "encoded": "N, I d k m a i e w. I o k h d."
+    },
+    {
+        "character": "BUSINESS PERSON #2",
+        "lines": "I thought he'd never die!",
+        "abbrev": false,
+        "encoded": "I t h n d!"
+    },
+    {
+        "character": "BUSINESS PERSON #3",
+        "lines": "It's very likely to be a cheap funeral. I don't know of anyone who will attend.",
+        "abbrev": false,
+        "encoded": "I v l t b a c f. I d k o a w w a."
+    },
+    {
+        "character": "BUSINESS PERSON #2",
+        "lines": "I don't mind going. (Beat) If lunch is provided!",
+        "abbrev": false,
+        "encoded": "I d m g. (Beat) I l i p!"
+    },
+    {
+        "character": "BUSINESS PERSON #1",
+        "lines": "What has he done with his money?",
+        "abbrev": false,
+        "encoded": "W h h d w h m?"
+    },
+    {
+        "character": "BUSINESS PERSON #2",
+        "lines": "I haven't heard. Left it to his company, perhaps.",
+        "abbrev": false,
+        "encoded": "I h h. L i t h c, p."
+    },
+    {
+        "character": "BUSINESS PERSON #3",
+        "lines": "",
+        "abbrev": false,
+        "encoded": ""
+    },
+    {
+        "character": "BUSINESS PERSON #3",
+        "lines": "He hasn't left it to me - that's all I know!",
+        "abbrev": false,
+        "encoded": "H h l i t m t a I k!"
+    },
+    {
+        "character": "BUSINESS PERSON #1",
+        "lines": "I suppose Old Scratch has got his own at last, hey?",
+        "abbrev": false,
+        "encoded": "I s O S h g h o a l, h?"
+    },
+    {
+        "character": "BUSINESS PERSON #3",
+        "lines": "It makes you think, eh?",
+        "abbrev": false,
+        "encoded": "I m y t, e?"
+    },
+    {
+        "character": "BUSINESS PERSON #2",
+        "lines": "(Beat) I think... I'm hungry!",
+        "abbrev": false,
+        "encoded": "(Beat) I t. I h!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Why show me such a trivial conversation, Spirit? To whom were they referring? Not Old Jacob, surely; his death was 7 years prior...",
+        "abbrev": false,
+        "encoded": "W s m s a t c, S? T w w t r? N O J, s; h d w 7 y p."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "",
+        "abbrev": false,
+        "encoded": ""
+    },
+    {
+        "character": "THIEF 3",
+        "lines": "Let the charwoman alone to be the first! Let the laundress alone to be the second; and let the undertaker's man alone to be the third. Look here, Old Joe, here's a chance! If we haven't all three met here without meaning it!",
+        "abbrev": false,
+        "encoded": "L t c a t b t f! L t l a t b t s; a l t u m a t b t t. L h, O J, h a c! I w h a t m h w m i!"
+    },
+    {
+        "character": "JOE",
+        "lines": "You couldn't have met in a better place. Come into the parlor. Stop till I shut the door of the shop. Ah! how it skreeks! There an't such a rusty bit of metal in the place as its own hinges, I believe; and I'm sure there's no such old bones here as mine. Ha! ha! We're all suitable to our calling, we're well matched. Come into the parlor. Come into the parlor.",
+        "abbrev": false,
+        "encoded": "Y c h m i a b p. C i t p. S t I s t d o t s. A! h i s! T a s a r b o m i t p a i o h, I b; a I s t n s o b h a m. H! h! W a s t o c, w w m. C i t p. C i t p."
+    },
+    {
+        "character": "THIEF 1",
+        "lines": "What odds, then, Mrs. Dilber? Every person has a right to take care of themselves. He always did!",
+        "abbrev": false,
+        "encoded": "W o, t, M. D? E p h a r t t c o t. H a d!"
+    },
+    {
+        "character": "THIEF 2",
+        "lines": "That's true, indeed! No man more so.",
+        "abbrev": false,
+        "encoded": "T t, i! N m m s."
+    },
+    {
+        "character": "THIEF 3",
+        "lines": "Why, then, don't stand staring as if you was afraid, woman! Who's the wiser? We're not going to pick holes in each other's coats, I suppose?",
+        "abbrev": false,
+        "encoded": "W, t, d s s a i y w a, w! W t w? W n g t p h i e o c, I s?"
+    },
+    {
+        "character": "THIEF 1 AND 2",
+        "lines": "No indeed! We should hope not.",
+        "abbrev": false,
+        "encoded": "N i! W s h n."
+    },
+    {
+        "character": "THIEF 3",
+        "lines": "Very well then! That's enough. Who's the worse for the loss of a few things like these? Not a dead man, I suppose?",
+        "abbrev": false,
+        "encoded": "V w t! T e. W t w f t l o a f t l t? N a d m, I s?"
+    },
+    {
+        "character": "THIEF 1",
+        "lines": "(Laughing) No indeed!",
+        "abbrev": false,
+        "encoded": "(Laughing) N i!"
+    },
+    {
+        "character": "THIEF 3",
+        "lines": "If he wanted to keep 'em after he was dead, the wicked old screw, why wasn't he natural in his lifetime? If he had been, he'd have had somebody to look after him when he was struck with Death, instead of lying gasping out his last there, alone by himself.",
+        "abbrev": false,
+        "encoded": "I h w t k 'em a h w d, t w o s, w w h n i h l? I h h b, h h h s t l a h w h w s w D, i o l g o h l t, a b h."
+    },
+    {
+        "character": "THIEF 2",
+        "lines": "It's the truest word that ever was spoke. It's a judgment on him.",
+        "abbrev": false,
+        "encoded": "I t t w t e w s. I a j o h."
+    },
+    {
+        "character": "THIEF 3",
+        "lines": "I wish it was a little heavier judgment and it should have been, you may depend upon it, if I could have laid my hands on anything else. Open that bundle, old Joe, and let me know the value of it. Speak out plain. I'm not afraid to be the first, nor afraid for them to see it. We knew pretty well that we were helping ourselves before we met here, I believe. It's no sin. Open the bundle, Joe.",
+        "abbrev": false,
+        "encoded": "I w i w a l h j a i s h b, y m d u i, i I c h l m h o a e. O t b, o J, a l m k t v o i. S o p. I n a t b t f, n a f t t s i. W k p w t w w h o b w m h, I b. I n s. O t b, J."
+    },
+    {
+        "character": "THIEF 3",
+        "lines": "Oy!",
+        "abbrev": false,
+        "encoded": "O!"
+    },
+    {
+        "character": "THIEF 2",
+        "lines": "Sorry, love. On a schedule and all - tickety tock!",
+        "abbrev": false,
+        "encoded": "S, l. O a s a a t t!"
+    },
+    {
+        "character": "JOE",
+        "lines": "That's your account and I wouldn't give another sixpence, if I was to be boiled for not doing it. Who's next?",
+        "abbrev": false,
+        "encoded": "T y a a I w g a s, i I w t b b f n d i. W n?"
+    },
+    {
+        "character": "JOE",
+        "lines": "I always give too much to ladies. It's a weakness of mine, and that's the way I ruin myself. That's your account. If you asked me for another penny, and made it an open question, I'd repent of being so liberal, and knock off half-a-crown.",
+        "abbrev": false,
+        "encoded": "I a g t m t l. I a w o m, a t t w I r m. T y a. I y a m f a p, a m i a o q, I r o b s l, a k o h a c."
+    },
+    {
+        "character": "THIEF 3",
+        "lines": "And now undo my bundle, Joe.",
+        "abbrev": false,
+        "encoded": "A n u m b, J."
+    },
+    {
+        "character": "JOE",
+        "lines": "What do you call this? Bed-curtains?",
+        "abbrev": false,
+        "encoded": "W d y c t? B c?"
+    },
+    {
+        "character": "THIEF 3",
+        "lines": "Ah! Fine bed-curtains!",
+        "abbrev": false,
+        "encoded": "A! F b c!"
+    },
+    {
+        "character": "JOE",
+        "lines": "You don't mean to say you took 'em down, rings and all, with him lying there?",
+        "abbrev": false,
+        "encoded": "Y d m t s y t 'em d, r a a, w h l t?"
+    },
+    {
+        "character": "THIEF 3",
+        "lines": "Yes, I do. Why not?",
+        "abbrev": false,
+        "encoded": "Y, I d. W n?"
+    },
+    {
+        "character": "JOE",
+        "lines": "You were born to make your fortune and you'll certainly do it.",
+        "abbrev": false,
+        "encoded": "Y w b t m y f a y c d i."
+    },
+    {
+        "character": "THIEF 3",
+        "lines": "I certainly shan't hold my hand, when I can get anything in it by reaching it out, for the sake of such a man as he was, I promise you, Joe. Don't drop that oil upon the blankets, now.",
+        "abbrev": false,
+        "encoded": "I c s h m h, w I c g a i i b r i o, f t s o s a m a h w, I p y, J. D d t o u t b, n."
+    },
+    {
+        "character": "JOE",
+        "lines": "His blankets?",
+        "abbrev": false,
+        "encoded": "H b?"
+    },
+    {
+        "character": "THIEF 3",
+        "lines": "Whose else's do you think? He isn't likely to take cold without 'em, I dare say.",
+        "abbrev": false,
+        "encoded": "W e d y t? H i l t t c w 'em, I d s."
+    },
+    {
+        "character": "JOE",
+        "lines": "I hope he didn't die of anything catching? Eh?",
+        "abbrev": false,
+        "encoded": "I h h d d o a c? E?"
+    },
+    {
+        "character": "THIEF 3",
+        "lines": "Don't you be afraid of that. I an't so fond of his company that I'd loiter about him for such things, if he did. Ah! You may look through that shirt till your eyes ache, but you won't find a hole in it, nor a threadbare place. It's the best he had, and a fine one too. They'd have wasted it, if it hadn't been for me.",
+        "abbrev": false,
+        "encoded": "D y b a o t. I a s f o h c t I l a h f s t, i h d. A! Y m l t t s t y e a, b y w f a h i i, n a t p. I t b h h, a a f o t. T h w i, i i h b f m."
+    },
+    {
+        "character": "JOE",
+        "lines": "What do you call wasting of it?",
+        "abbrev": false,
+        "encoded": "W d y c w o i?"
+    },
+    {
+        "character": "THIEF 3",
+        "lines": "Putting it on him to be buried in, to be sure. Somebody was fool enough to do it, but I took it off again. If calico an't good enough for such a purpose, it isn't good enough for anything. It's quite a becoming to the body. He can't look uglier than he did in that one.",
+        "abbrev": false,
+        "encoded": "P i o h t b b i, t b s. S w f e t d i, b I t i o a. I c a g e f s a p, i i g e f a. I q a b t t b. H c l u t h d i t o."
+    },
+    {
+        "character": "JOE",
+        "lines": "This is the end of it, you see! He frightened every one away from him when he was alive, to profit us when he was dead! Ha, ha, ha!",
+        "abbrev": false,
+        "encoded": "T i t e o i, y s! H f e o a f h w h w a, t p u w h w d! H, h, h!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Spirit! I see, I see. The case of this unhappy man might be my own. My life tends that way now. Oh, Spirit, if there is any person in the town who feels emotion caused by this man's death, show that person to me, Spirit, I beseech you!",
+        "abbrev": false,
+        "encoded": "S! I s, I s. T c o t u m m b m o. M l t t w n. O, S, i t i a p i t t w f e c b t m d, s t p t m, S, I b y!"
+    },
+    {
+        "character": "CAROLINE",
+        "lines": "Well then? (Beat) Is it good or bad?",
+        "abbrev": false,
+        "encoded": "W t? (Beat) I i g o b?"
+    },
+    {
+        "character": "THOMAS",
+        "lines": "Bad.",
+        "abbrev": false,
+        "encoded": "B."
+    },
+    {
+        "character": "CAROLINE",
+        "lines": "We are quite ruined?",
+        "abbrev": false,
+        "encoded": "W a q r?"
+    },
+    {
+        "character": "THOMAS",
+        "lines": "No. There is hope yet, Caroline.",
+        "abbrev": false,
+        "encoded": "N. T i h y, C."
+    },
+    {
+        "character": "CAROLINE",
+        "lines": "If he relents, there is! Nothing is past hope, if such a miracle has happened.",
+        "abbrev": false,
+        "encoded": "I h r, t i! N i p h, i s a m h h."
+    },
+    {
+        "character": "THOMAS",
+        "lines": "He is past relenting. He is dead.",
+        "abbrev": false,
+        "encoded": "H i p r. H i d."
+    },
+    {
+        "character": "CAROLINE",
+        "lines": "(Overjoyed) Thank goodness! (Catching herself) Oh, forgive me.",
+        "abbrev": false,
+        "encoded": "(Overjoyed) T g! (Catching herself) O, f m."
+    },
+    {
+        "character": "THOMAS",
+        "lines": "What the half-drunken woman, whom I told you of last night, said to me when I tried to see him and obtain a week's delay--and what I thought was a mere excuse to avoid me--turns out to have been quite true. He was not only very ill, but dying, then.",
+        "abbrev": false,
+        "encoded": "W t h d w, w I t y o l n, s t m w I t t s h a o a w d a w I t w a m e t a m t o t h b q t. H w n o v i, b d, t."
+    },
+    {
+        "character": "CAROLINE",
+        "lines": "To whom will our debt be transferred?",
+        "abbrev": false,
+        "encoded": "T w w o d b t?"
+    },
+    {
+        "character": "THOMAS",
+        "lines": "I don't know. But, before that time, we shall be ready with the money; and even though we were not, it would be bad fortune indeed to find so merciless a creditor in his successor. We may sleep tonight with light hearts, Caroline!",
+        "abbrev": false,
+        "encoded": "I d k. B, b t t, w s b r w t m; a e t w w n, i w b b f i t f s m a c i h s. W m s t w l h, C!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Let me see some tenderness connected with a death, or the dark fate of the man to whom they referred will be forever present to me.",
+        "abbrev": false,
+        "encoded": "L m s s t c w a d, o t d f o t m t w t r w b f p t m."
+    },
+    {
+        "character": "PETER",
+        "lines": "(Reading) \"And he took a child, and set him in the midst of them.\"",
+        "abbrev": false,
+        "encoded": "(Reading) A h t a c, a s h i t m o t."
+    },
+    {
+        "character": "MRS. CRATCHIT",
+        "lines": "The color hurts my eyes. They're better now again. It makes them weak by candle-light; and I wouldn't show weak eyes to your father when he comes home for the world. It must be near his time.",
+        "abbrev": false,
+        "encoded": "T c h m e. T b n a. I m t w b c l; a I w s w e t y f w h c h f t w. I m b n h t."
+    },
+    {
+        "character": "PETER",
+        "lines": "Past it, rather. But I think he has walked a little slower than he used, these few last evenings, mother.",
+        "abbrev": false,
+        "encoded": "P i, r. B I t h h w a l s t h u, t f l e, m."
+    },
+    {
+        "character": "MRS. CRATCHIT",
+        "lines": "I have known him walk with--I have known him walk with Tiny Tim upon his shoulder very fast indeed.",
+        "abbrev": false,
+        "encoded": "I h k h w w I h k h w w T T u h s v f i."
+    },
+    {
+        "character": "PETER",
+        "lines": "And so have I. Often.",
+        "abbrev": false,
+        "encoded": "A s h I. O."
+    },
+    {
+        "character": "BELINDA AND MARTHA",
+        "lines": "And so have I.",
+        "abbrev": false,
+        "encoded": "A s h I."
+    },
+    {
+        "character": "MRS. CRATCHIT",
+        "lines": "But he was very light to carry and his father loved him so, that it was no trouble, no trouble. And there is your father at the door!",
+        "abbrev": false,
+        "encoded": "B h w v l t c a h f l h s, t i w n t, n t. A t i y f a t d!"
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "Hello, my dears. It's a chilly one tonight.",
+        "abbrev": false,
+        "encoded": "H, m d. I a c o t."
+    },
+    {
+        "character": "BELINDA",
+        "lines": "Don't mind it, father. Don't be grieved!",
+        "abbrev": false,
+        "encoded": "D m i, f. D b g!"
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "Don't you worry, Belinda. Don't you worry. Let's see your work.",
+        "abbrev": false,
+        "encoded": "D y w, B. D y w. L s y w."
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "Alright there - you'll be done long before Sunday, then!",
+        "abbrev": false,
+        "encoded": "A t y b d l b S, t!"
+    },
+    {
+        "character": "MRS. CRATCHIT",
+        "lines": "Sunday! You went today, then, Robert?",
+        "abbrev": false,
+        "encoded": "S! Y w t, t, R?"
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "Yes, my dear. I wish you could have gone. It would have done you good to see how green a place it is. But you'll see it often. I promised him that I would walk there on a Sunday. (He fights not to weep) My little, little child! My little child!",
+        "abbrev": false,
+        "encoded": "Y, m d. I w y c h g. I w h d y g t s h g a p i i. B y s i o. I p h t I w w t o a S. (He fights not to weep) M l, l c! M l c!"
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "I saw Mr. Scrooge's nephew today. Oh, but he was extra kind. I had scarcely seen him but once, and who, meeting him in the street, and seeing that I looked a little down, you know, inquired what had happened to distress me. On which, for he is the pleasantest-spoken gentleman you ever heard, I told him. He said, 'I am heartily sorry for it, Mr. Cratchit, and heartily sorry for your good wife.' By-the-by, how he ever knew that I don't know.",
+        "abbrev": false,
+        "encoded": "I s M. S n t. O, b h w e k. I h s s h b o, a w, m h i t s, a s t I l a l d, y k, i w h h t d m. O w, f h i t p s g y e h, I t h. H s, 'I a h s f i, M. C, a h s f y g w B t b, h h e k t I d k."
+    },
+    {
+        "character": "MRS. CRATCHIT",
+        "lines": "Knew what, my dear?",
+        "abbrev": false,
+        "encoded": "K w, m d?"
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "Why, that you were a good wife.",
+        "abbrev": false,
+        "encoded": "W, t y w a g w."
+    },
+    {
+        "character": "PETER",
+        "lines": "Everybody knows that.",
+        "abbrev": false,
+        "encoded": "E k t."
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "Very well observed, my boy! I hope they do. 'Heartily sorry,' he said, 'for your good wife. If I can be of service to you in any way,' he said, giving me his card, 'that's where I live. Pray come to me.' Now it wasn't for the sake of anything he might be able to do for us, so much as for his kind way, that this was quite delightful. It really seemed as if he had known our Tiny Tim, and felt with us.'",
+        "abbrev": false,
+        "encoded": "V w o, m b! I h t d. 'Heartily s h s, 'for y g w. I I c b o s t y i a w h s, g m h c, 'that's w I l. P c t m N i w f t s o a h m b a t d f u, s m a f h k w, t t w q d. I r s a i h h k o T T, a f w u"
+    },
+    {
+        "character": "MRS. CRATCHIT",
+        "lines": "I'm sure he's a good soul!",
+        "abbrev": false,
+        "encoded": "I s h a g s!"
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "You would be sure of it, my dear, if you saw and spoke to him. I shouldn't be at all surprised--mark what I say!--if he got Peter a better situation.",
+        "abbrev": false,
+        "encoded": "Y w b s o i, m d, i y s a s t h. I s b a a s m w I s! i h g P a b s."
+    },
+    {
+        "character": "MRS. CRATCHIT",
+        "lines": "Only hear that, Peter.",
+        "abbrev": false,
+        "encoded": "O h t, P."
+    },
+    {
+        "character": "MARTHA",
+        "lines": "And then Peter will be keeping company with some one, and setting up for himself.",
+        "abbrev": false,
+        "encoded": "A t P w b k c w s o, a s u f h."
+    },
+    {
+        "character": "PETER",
+        "lines": "Get along with you!",
+        "abbrev": false,
+        "encoded": "G a w y!"
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "It's just as likely as not, one of these days; though there's plenty of time for that, my dear. But, however and whenever we part from one another, I am sure we shall none of us forget poor Tiny Tim--shall we--or this first parting that there was among us?",
+        "abbrev": false,
+        "encoded": "I j a l a n, o o t d; t t p o t f t, m d. B, h a w w p f o a, I a s w s n o u f p T T s w o t f p t t w a u?"
+    },
+    {
+        "character": "ALL",
+        "lines": "Never, father!",
+        "abbrev": false,
+        "encoded": "N, f!"
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "And I know, I know, my dears, that when we recollect how patient and how mild he was; although he was a little, little child; we shall not quarrel easily among ourselves, and forget poor Tiny Tim in doing it.",
+        "abbrev": false,
+        "encoded": "A I k, I k, m d, t w w r h p a h m h w; a h w a l, l c; w s n q e a o, a f p T T i d i."
+    },
+    {
+        "character": "ALL",
+        "lines": "No, never, father!",
+        "abbrev": false,
+        "encoded": "N, n, f!"
+    },
+    {
+        "character": "BOB CRATCHIT",
+        "lines": "I am very happy. I am very happy!",
+        "abbrev": false,
+        "encoded": "I a v h. I a v h!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Spirit, something informs me that our parting moment is at hand. I know it but I know not how. Tell me what man it was of whom everyone previously was speaking?",
+        "abbrev": false,
+        "encoded": "S, s i m t o p m i a h. I k i b I k n h. T m w m i w o w e p w s?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "My home is that way, Spirit. Conduct me thence, and let me behold what I shall be in days to come.",
+        "abbrev": false,
+        "encoded": "M h i t w, S. C m t, a l m b w I s b i d t c."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "The house is yonder. Why do you point away?",
+        "abbrev": false,
+        "encoded": "T h i y. W d y p a?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Before I draw nearer to that stone to which you point, answer me one question. Are these the shadows of the things that Will be, or are they shadows of the things that May be only?",
+        "abbrev": false,
+        "encoded": "B I d n t t s t w y p, a m o q. A t t s o t t t W b, o a t s o t t t M b o?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Men's courses will foreshadow certain ends, to which, if persevered in, they must lead. But if the courses be departed from, the ends will change. Say it is thus with what you show me!",
+        "abbrev": false,
+        "encoded": "M c w f c e, t w, i p i, t m l. B i t c b d f, t e w c. S i i t w w y s m!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Am I that man to whom they referred?",
+        "abbrev": false,
+        "encoded": "A I t m t w t r?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "No, Spirit! Oh no, no!",
+        "abbrev": false,
+        "encoded": "N, S! O n, n!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Spirit, hear me! I am not the man I was. I will not be the man I must have been but for this intercourse. Why show me this, if I am past all hope?",
+        "abbrev": false,
+        "encoded": "S, h m! I a n t m I w. I w n b t m I m h b b f t i. W s m t, i I a p a h?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Good Spirit, your nature intercedes for me, and pities me. Assure me that I yet may change these shadows you have shown me by an altered life?",
+        "abbrev": false,
+        "encoded": "G S, y n i f m, a p m. A m t I y m c t s y h s m b a a l?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "I will honor Christmas in my heart, and try to keep it all the year. I will live in the Past, the Present, and the Future. The Spirits of all Three shall strive within me. I will not shut out the lessons that they teach. Oh, tell me I may sponge away the writing on this stone!",
+        "abbrev": false,
+        "encoded": "I w h C i m h, a t t k i a t y. I w l i t P, t P, a t F. T S o a T s s w m. I w n s o t l t t t. O, t m I m s a t w o t s!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Spirit! No, no I will keep Christmas in my heart! I will keep it, Spirit! Please! Please!",
+        "abbrev": false,
+        "encoded": "S! N, n I w k C i m h! I w k i, S! P! P!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "What? What? Yes! The bedpost! My own bedpost. My own bed, my own room! It's here! I'm here!",
+        "abbrev": false,
+        "encoded": "W? W? Y! T b! M o b. M o b, m o r! I h! I h!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "The Spirits of all Three shall strive within me. O Jacob Marley! Heaven and the Christmas Time be praised for this! I say it on my knees, old Jacob; on my knees! Ah - the bed curtains - they are not torn down. They are not torn down, rings and all. And the shadows of the things that would have been may be dispelled. They will be. I know they will.",
+        "abbrev": false,
+        "encoded": "T S o a T s s w m. O J M! H a t C T b p f t! I s i o m k, o J; o m k! A t b c t a n t d. T a n t d, r a a. A t s o t t t w h b m b d. T w b. I k t w."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "I don't know what to do. I am as light as a feather, I am as happy as an angel. I am as merry as a schoolboy, I am as giddy as a drunken man. A merry Christmas to everybody! A happy New year to all the world!",
+        "abbrev": false,
+        "encoded": "I d k w t d. I a a l a a f, I a a h a a a. I a a m a a s, I a a g a a d m. A m C t e! A h N y t a t w!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "There's the saucepan that the gruel was in! There's the spot by which the Ghost of Jacob Marley entered! There's the corner where the Ghost of Christmas Present sat! There's the window where I saw the wandering Spirits! It's all right, it's all true, it all happened. Ha, ha, ha! I don't know what day of the month it is. I don't know how long I have been among the Spirits. I don't know anything. I'm quite a baby. Never mind. I don't care. I'd rather be a baby.",
+        "abbrev": false,
+        "encoded": "T t s t t g w i! T t s b w t G o J M e! T t c w t G o C P s! T t w w I s t w S! I a r, i a t, i a h. H, h, h! I d k w d o t m i i. I d k h l I h b a t S. I d k a. I q a b. N m. I d c. I r b a b."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "No fog, no mist; clear, bright, jovial, stirring, cold; cold, piping for the blood to dance to; golden sunlight; heavenly sky; sweet fresh air; merry bells. Oh glorious! Glorious!",
+        "abbrev": false,
+        "encoded": "N f, n m; c, b, j, s, c; c, p f t b t d t; g s; h s; s f a; m b. O g! G!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Hallo! Whoop! Hallo here!",
+        "abbrev": false,
+        "encoded": "H! W! H h!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "What's today?",
+        "abbrev": false,
+        "encoded": "W t?"
+    },
+    {
+        "character": "TURKEY BOY",
+        "lines": "Eh?",
+        "abbrev": false,
+        "encoded": "E?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "What's today, my fine fellow?",
+        "abbrev": false,
+        "encoded": "W t, m f f?"
+    },
+    {
+        "character": "TURKEY BOY",
+        "lines": "Today! Why, Christmas Day!",
+        "abbrev": false,
+        "encoded": "T! W, C D!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "It's Christmas Day! I haven't missed it. The Spirits have done it all in one night. They can do anything they like. Of course they can. Of course they can. Hallo, my fine fellow!",
+        "abbrev": false,
+        "encoded": "I C D! I h m i. T S h d i a i o n. T c d a t l. O c t c. O c t c. H, m f f!"
+    },
+    {
+        "character": "TURKEY BOY",
+        "lines": "Hallo!",
+        "abbrev": false,
+        "encoded": "H!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Do you know the poulterer's in the next street but one, at the corner?",
+        "abbrev": false,
+        "encoded": "D y k t p i t n s b o, a t c?"
+    },
+    {
+        "character": "TURKEY BOY",
+        "lines": "I should hope I did.",
+        "abbrev": false,
+        "encoded": "I s h I d."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "An intelligent boy! A remarkable boy! Do you know whether they've sold the prize turkey that was hanging up there? Not the little prize turkey: the big one?",
+        "abbrev": false,
+        "encoded": "A i b! A r b! D y k w t s t p t t w h u t? N t l p t: t b o?"
+    },
+    {
+        "character": "TURKEY BOY",
+        "lines": "What, the one as big as me?",
+        "abbrev": false,
+        "encoded": "W, t o a b a m?"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "What a delightful boy! It's a pleasure to talk to him. Yes, my buck!",
+        "abbrev": false,
+        "encoded": "W a d b! I a p t t t h. Y, m b!"
+    },
+    {
+        "character": "TURKEY BOY",
+        "lines": "It's hanging there now.",
+        "abbrev": false,
+        "encoded": "I h t n."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Is it? Go and buy it.",
+        "abbrev": false,
+        "encoded": "I i? G a b i."
+    },
+    {
+        "character": "TURKEY BOY",
+        "lines": "Go on!",
+        "abbrev": false,
+        "encoded": "G o!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "No, no, I am in earnest. Go and buy it and tell 'em to bring it here, that I may give them the directions where to take it. Come back with the man, and I'll give you a shilling. Come back with him in less than five minutes, and I'll give you half-a-crown!",
+        "abbrev": false,
+        "encoded": "N, n, I a i e. G a b i a t 'em t b i h, t I m g t t d w t t i. C b w t m, a I g y a s. C b w h i l t f m, a I g y h a c!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "I'll send it to Bob Cratchit's. He shan't know who sends it. It's twice the size of Tiny Tim.",
+        "abbrev": false,
+        "encoded": "I s i t B C. H s k w s i. I t t s o T T."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Christmas, Jacob. I shall love it as long as I live! Oh, I will live in the Past, the Present, and the Future, Jacob!",
+        "abbrev": false,
+        "encoded": "C, J. I s l i a l a I l! O, I w l i t P, t P, a t F, J!"
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "And here's the turkey. Hallo! Whoop! How are you! Merry Christmas! Why, it's impossible to carry that to Bob's. You must have a cab. Here (Hands the boy some cash) go and fetch a cab and take it to 6-25-06 Camden Town.",
+        "abbrev": false,
+        "encoded": "A h t t. H! W! H a y! M C! W, i i t c t t B. Y m h a c. H (Hands the boy some cash) g a f a c a t i t 6 25 06 C T."
+    }
+];
+/**
+ * Create a set of unique character names from the provided list of character lines.
+ * @param characterLines - The array of CharacterLine objects.
+ * @returns A set of unique character names.
+ */
+const createCharacterSet = (characterLines) => {
+    return new Set(characterLines.map(cl => cl.character).sort());
+};
+/**
+ * Log a message to the log container element.
+ * @param message - The message to log.
+ */
+const logMessage = (message) => {
+    const logContainer = document.getElementById('log-container');
+    if (logContainer && message) {
+        const logEntry = document.createElement('p');
+        logEntry.textContent = message;
+        logContainer.appendChild(logEntry);
+    }
+};
+/**
+ * Display the lines for a particular character, including cues from previous characters.
+ * @param characterName - The name of the character whose lines are to be displayed.
+ */
+const displayCharacterLines = (characterName) => {
+    const scriptContainer = document.getElementById('script-container');
+    const characterButtonsContainer = document.getElementById('character-buttons');
+    if (!scriptContainer || !characterButtonsContainer)
+        return;
+    // Set the browser tab title to the character's name
+    document.title = characterName;
+    // Clear character buttons and replace with the character name as a heading
+    characterButtonsContainer.innerHTML = '';
+    const characterHeading = document.createElement('h2');
+    characterHeading.textContent = characterName;
+    characterButtonsContainer.appendChild(characterHeading);
+    // Add Abbreviate/Expand button
+    const toggleButton = document.createElement('button');
+    toggleButton.textContent = 'Abbreviate';
+    toggleButton.addEventListener('click', () => {
+        const shouldAbbreviate = toggleButton.textContent === 'Abbreviate';
+        toggleButton.textContent = shouldAbbreviate ? 'Expand' : 'Abbreviate';
+        scriptData.forEach(cl => {
+            if (cl.character === characterName) {
+                cl.abbrev = shouldAbbreviate;
+            }
+        });
+        refreshCharacterLines(characterName); // Refresh display
+    });
+    characterButtonsContainer.appendChild(toggleButton);
+    refreshCharacterLines(characterName);
+};
+/**
+ * Refresh the displayed lines for the character.
+ * @param characterName - The name of the character whose lines are to be displayed.
+ */
+const refreshCharacterLines = (characterName) => {
+    const scriptContainer = document.getElementById('script-container');
+    if (!scriptContainer)
+        return;
+    scriptContainer.innerHTML = ''; // Clear previous messages
+    scriptData.forEach((cl, index) => {
+        if (cl.character !== characterName)
+            return;
+        if (index > 0) {
+            const cueLine = scriptData[index - 1];
+            if (cueLine.character !== characterName) { // Only display cue if spoken by a different character
+                appendCueLine(scriptContainer, cueLine);
+            }
+        }
+        appendCharacterLine(scriptContainer, cl);
+    });
+};
+/**
+ * Append a cue line to the script container.
+ * @param container - The script container element.
+ * @param cueLine - The CharacterLine object representing the cue.
+ */
+const appendCueLine = (container, cueLine) => {
+    const cueLogEntry = document.createElement('p');
+    cueLogEntry.textContent = `[cue] (${cueLine.character}): ${cueLine.lines}`;
+    container.appendChild(cueLogEntry);
+};
+/**
+ * Append a character line to the script container, allowing toggling between full and encoded lines.
+ * @param container - The script container element.
+ * @param characterLine - The CharacterLine object representing the character line.
+ */
+const appendCharacterLine = (container, characterLine) => {
+    const logEntry = document.createElement('p');
+    const spokenSpan = document.createElement('span');
+    spokenSpan.className = 'spoken-line';
+    spokenSpan.style.backgroundColor = 'yellow';
+    spokenSpan.style.cursor = 'pointer';
+    spokenSpan.textContent = characterLine.abbrev ? characterLine.encoded : characterLine.lines;
+    spokenSpan.addEventListener('click', () => {
+        characterLine.abbrev = !characterLine.abbrev;
+        spokenSpan.textContent = characterLine.abbrev ? characterLine.encoded : characterLine.lines;
+    });
+    logEntry.innerHTML = `${characterLine.character}: `;
+    logEntry.appendChild(spokenSpan);
+    container.appendChild(logEntry);
+};
+/**
+ * Main function to initialize the character buttons and set up the event listeners.
+ */
+const main = () => {
+    const characterSet = createCharacterSet(scriptData);
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('character-buttons');
+        if (!container)
+            return;
+        characterSet.forEach(character => {
+            const button = document.createElement('button');
+            button.textContent = character;
+            button.addEventListener('click', () => {
+                displayCharacterLines(character);
+            });
+            container.appendChild(button);
+        });
+    });
+};
+main();
+
+
+</script>
+</body>
+
+</html>
