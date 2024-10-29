@@ -2,6 +2,9 @@
 <html lang="en">
 
 <head>
+    <link rel="icon" href="candle.png" type="image/png">
+    <link rel="apple-touch-icon" href="candle.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="candle.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Memorizer</title>
@@ -3479,49 +3482,52 @@ const createCharacterSet = (characterLines) => {
     return new Set(characterLines.map(cl => cl.character).sort());
 };
 /**
- * Log a message to the log container element.
- * @param message - The message to log.
+ * Update the browser tab title and URL based on the selected character.
+ * @param characterName - The name of the character to be displayed.
  */
-const logMessage = (message) => {
-    const logContainer = document.getElementById('log-container');
-    if (logContainer && message) {
-        const logEntry = document.createElement('p');
-        logEntry.textContent = message;
-        logContainer.appendChild(logEntry);
-    }
+const updateTitleAndUrl = (characterName) => {
+    document.title = characterName;
+    history.pushState({}, '', `?character=${encodeURIComponent(characterName)}`);
+};
+/**
+ * Set the character heading and add the Abbreviate/Expand button.
+ * @param characterName - The name of the character.
+ */
+const setupCharacterHeading = (characterName) => {
+    const characterButtonsContainer = document.getElementById('character-buttons');
+    if (!characterButtonsContainer)
+        return;
+    characterButtonsContainer.innerHTML = '';
+    const characterHeading = document.createElement('h2');
+    characterHeading.textContent = characterName;
+    characterButtonsContainer.appendChild(characterHeading);
+    const toggleButton = document.createElement('button');
+    toggleButton.textContent = 'Abbreviate';
+    toggleButton.addEventListener('click', () => toggleAbbreviation(characterName, toggleButton));
+    characterButtonsContainer.appendChild(toggleButton);
+};
+/**
+ * Toggle the abbreviation state for all lines of the selected character.
+ * @param characterName - The name of the character.
+ * @param toggleButton - The button element that toggles between Abbreviate and Expand.
+ */
+const toggleAbbreviation = (characterName, toggleButton) => {
+    const shouldAbbreviate = toggleButton.textContent === 'Abbreviate';
+    toggleButton.textContent = shouldAbbreviate ? 'Expand' : 'Abbreviate';
+    scriptData.forEach(cl => {
+        if (cl.character === characterName) {
+            cl.abbrev = shouldAbbreviate;
+        }
+    });
+    refreshCharacterLines(characterName);
 };
 /**
  * Display the lines for a particular character, including cues from previous characters.
  * @param characterName - The name of the character whose lines are to be displayed.
  */
 const displayCharacterLines = (characterName) => {
-    const scriptContainer = document.getElementById('script-container');
-    const characterButtonsContainer = document.getElementById('character-buttons');
-    if (!scriptContainer || !characterButtonsContainer)
-        return;
-    // Set the browser tab title to the character's name
-    document.title = characterName;
-    // Update the URL with the character name
-    history.pushState({}, '', `?character=${encodeURIComponent(characterName)}`);
-    // Clear character buttons and replace with the character name as a heading
-    characterButtonsContainer.innerHTML = '';
-    const characterHeading = document.createElement('h2');
-    characterHeading.textContent = characterName;
-    characterButtonsContainer.appendChild(characterHeading);
-    // Add Abbreviate/Expand button
-    const toggleButton = document.createElement('button');
-    toggleButton.textContent = 'Abbreviate';
-    toggleButton.addEventListener('click', () => {
-        const shouldAbbreviate = toggleButton.textContent === 'Abbreviate';
-        toggleButton.textContent = shouldAbbreviate ? 'Expand' : 'Abbreviate';
-        scriptData.forEach(cl => {
-            if (cl.character === characterName) {
-                cl.abbrev = shouldAbbreviate;
-            }
-        });
-        refreshCharacterLines(characterName); // Refresh display
-    });
-    characterButtonsContainer.appendChild(toggleButton);
+    updateTitleAndUrl(characterName);
+    setupCharacterHeading(characterName);
     refreshCharacterLines(characterName);
 };
 /**
