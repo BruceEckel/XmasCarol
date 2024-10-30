@@ -2998,6 +2998,7 @@ const scriptData = [
 ];
 let pauseFactor = 1.1;
 let wakeLock = null;
+let trimFirstCue = false;
 /**
  * Create a set of unique character names from the provided list of character lines.
  * @param characterLines - The array of CharacterLine objects.
@@ -3015,7 +3016,7 @@ const updateTitleAndUrl = (characterName) => {
     history.pushState({}, '', `?character=${encodeURIComponent(characterName)}`);
 };
 /**
- * Set the character heading and add the Abbreviate/Expand and Speak Cues buttons.
+ * Set the character heading and add the Abbreviate/Expand, Speak Cues buttons, and Trim First Cue checkbox.
  * @param characterName - The name of the character.
  */
 const setupCharacterHeading = (characterName) => {
@@ -3034,6 +3035,19 @@ const setupCharacterHeading = (characterName) => {
     speakButton.textContent = 'Speak Cues';
     speakButton.addEventListener('click', () => speakCues(characterName));
     characterButtonsContainer.appendChild(speakButton);
+    // Trim First Cue checkbox
+    const trimCueLabel = document.createElement('label');
+    trimCueLabel.textContent = ' Trim First Cue';
+    const trimCueCheckbox = document.createElement('input');
+    trimCueCheckbox.type = 'checkbox';
+    trimCueCheckbox.name = 'trim-first-cue';
+    trimCueCheckbox.checked = trimFirstCue;
+    trimCueCheckbox.addEventListener('change', () => {
+        trimFirstCue = trimCueCheckbox.checked;
+        refreshCharacterLines(characterName);
+    });
+    characterButtonsContainer.appendChild(trimCueCheckbox);
+    characterButtonsContainer.appendChild(trimCueLabel);
     // Pause factor control
     const pauseControl = document.createElement('input');
     pauseControl.type = 'range';
@@ -3111,7 +3125,12 @@ const speakCues = (characterName) => __awaiter(void 0, void 0, void 0, function*
         if (cl.character === characterName && i > 0) {
             const cueLine = scriptData[i - 1];
             if (cueLine.character !== characterName) {
-                const utterance = new SpeechSynthesisUtterance(cueLine.lines);
+                let cueText = cueLine.lines;
+                if (trimFirstCue && !scriptData.slice(0, i).some(prevCl => prevCl.character === characterName)) {
+                    const sentences = cueText.match(/[^.!?]+[.!?]+/g) || [cueText];
+                    cueText = sentences[sentences.length - 1].trim();
+                }
+                const utterance = new SpeechSynthesisUtterance(cueText);
                 window.speechSynthesis.speak(utterance);
                 yield new Promise(resolve => {
                     utterance.onend = resolve;
@@ -3149,7 +3168,8 @@ const refreshCharacterLines = (characterName) => {
         if (index > 0) {
             const cueLine = scriptData[index - 1];
             if (cueLine.character !== characterName) { // Only display cue if spoken by a different character
-                appendCueLine(scriptContainer, cueLine);
+                const isFirstCueForCharacter = !scriptData.slice(0, index).some(prevCl => prevCl.character === characterName);
+                appendCueLine(scriptContainer, cueLine, trimFirstCue && isFirstCueForCharacter);
             }
         }
         appendCharacterLine(scriptContainer, cl);
@@ -3159,10 +3179,16 @@ const refreshCharacterLines = (characterName) => {
  * Append a cue line to the script container.
  * @param container - The script container element.
  * @param cueLine - The CharacterLine object representing the cue.
+ * @param trim - Whether to trim the cue line to its final sentence.
  */
-const appendCueLine = (container, cueLine) => {
+const appendCueLine = (container, cueLine, trim) => {
+    let cueText = cueLine.lines;
+    if (trim) {
+        const sentences = cueText.match(/[^.!?]+[.!?]+/g) || [cueText];
+        cueText = sentences[sentences.length - 1].trim();
+    }
     const cueLogEntry = document.createElement('p');
-    cueLogEntry.textContent = `[cue] (${cueLine.character}): ${cueLine.lines}`;
+    cueLogEntry.textContent = `[cue] (${cueLine.character}): ${cueText}`;
     container.appendChild(cueLogEntry);
 };
 /**
@@ -3192,21 +3218,15 @@ const main = () => {
     const characterSet = createCharacterSet(scriptData);
     document.addEventListener('DOMContentLoaded', () => {
         const container = document.getElementById('character-buttons');
-        if (!container)
-            return;
-        characterSet.forEach(character => {
-            const button = document.createElement('button');
-            button.textContent = character;
-            button.addEventListener('click', () => {
-                displayCharacterLines(character);
+        if (container) {
+            characterSet.forEach(character => {
+                const button = document.createElement('button');
+                button.textContent = character;
+                button.onclick = () => {
+                    displayCharacterLines(character);
+                };
+                container.appendChild(button);
             });
-            container.appendChild(button);
-        });
-        // Check if there's a character in the URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const characterName = urlParams.get('character');
-        if (characterName && characterSet.has(characterName)) {
-            displayCharacterLines(characterName);
         }
     });
 };
