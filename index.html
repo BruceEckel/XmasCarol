@@ -603,9 +603,21 @@ const scriptData = [
     },
     {
         "character": "SCROOGE",
-        "lines": "Well! I have but to swallow this, and be for the rest of my days persecuted by a legion of goblins, all of my own creation. Humbug, I tell you: humbug! Mercy! Dreadful apparition, why do you trouble me?",
+        "lines": "Well! I have but to swallow this, and be for the rest of my days persecuted by a legion of goblins, all of my own creation. Humbug, I tell you: humbug!",
         "abbrev": false,
-        "encoded": "W! I h b t s t, a b f t r o m d p b a l o g, a o m o c. H, I t y: h! M! D a, w d y t m?"
+        "encoded": "W! I h b t s t, a b f t r o m d p b a l o g, a o m o c. H, I t y: h!"
+    },
+    {
+        "character": "MARLEY",
+        "lines": "AAAUGH! (Shakes Chains).",
+        "abbrev": false,
+        "encoded": "A! (Shakes Chains) ."
+    },
+    {
+        "character": "SCROOGE",
+        "lines": "Mercy! Dreadful apparition, why do you trouble me?",
+        "abbrev": false,
+        "encoded": "M! D a, w d y t m?"
     },
     {
         "character": "MARLEY",
@@ -3130,6 +3142,7 @@ const speakCues = (characterName) => __awaiter(void 0, void 0, void 0, function*
                     const sentences = cueText.match(/[^.!?]+[.!?]+/g) || [cueText];
                     cueText = sentences[sentences.length - 1].trim();
                 }
+                cueText = cueText.replace(/\([^\)]+\)/g, '').trim(); // Remove anything within parentheses
                 const utterance = new SpeechSynthesisUtterance(cueText);
                 window.speechSynthesis.speak(utterance);
                 yield new Promise(resolve => {
