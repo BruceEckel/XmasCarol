@@ -3215,6 +3215,12 @@ const appendCharacterLine = (container, characterLine) => {
  * Main function to initialize the character buttons and set up the event listeners.
  */
 const main = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const characterName = urlParams.get('character');
+    if (characterName) {
+        displayCharacterLines(characterName);
+        return;
+    }
     const characterSet = createCharacterSet(scriptData);
     document.addEventListener('DOMContentLoaded', () => {
         const container = document.getElementById('character-buttons');
